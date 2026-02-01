@@ -14,6 +14,16 @@ BASE_URLS = {
     "returns": "https://returns-api.wildberries.ru",
 }
 
+# Базовые URL песочницы WB API (https://dev.wildberries.ru/sandbox)
+SANDBOX_BASE_URLS = {
+    "content": "https://content-api-sandbox.wildberries.ru",
+    "marketplace": "https://marketplace-api-sandbox.wildberries.ru",
+    "prices": "https://discounts-prices-api-sandbox.wildberries.ru",
+    "analytics": "https://statistics-api-sandbox.wildberries.ru",
+    "advert": "https://advert-api-sandbox.wildberries.ru",
+    "feedbacks": "https://feedbacks-api-sandbox.wildberries.ru",
+}
+
 # Rate limits по доменам: (requests_per_period, period_seconds, min_interval_ms)
 RATE_LIMITS = {
     "content": (100, 60, 600),

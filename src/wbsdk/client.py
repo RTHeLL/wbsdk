@@ -10,6 +10,7 @@ from wbsdk.config import (
     DEFAULT_RETRY_ATTEMPTS,
     DEFAULT_RETRY_BACKOFF,
     DEFAULT_TIMEOUT,
+    SANDBOX_BASE_URLS,
 )
 from wbsdk.exceptions import WBAPIError, raise_for_status
 from wbsdk.rate_limiter import RateLimiter
@@ -26,7 +27,11 @@ if TYPE_CHECKING:
 
 
 class WBClient:
-    """Главный клиент Wildberries API."""
+    """Главный клиент Wildberries API.
+
+    Для работы с песочницей WB (https://dev.wildberries.ru/sandbox) передайте
+    sandbox=True. Токен должен быть с опцией «Тестовый контур» в личном кабинете WB.
+    """
 
     def __init__(
         self,
@@ -36,6 +41,7 @@ class WBClient:
         retry_attempts: int = DEFAULT_RETRY_ATTEMPTS,
         retry_backoff: float = DEFAULT_RETRY_BACKOFF,
         base_urls: dict[str, str] | None = None,
+        sandbox: bool = False,
     ):
         if not token or not isinstance(token, str):
             raise ValueError("Токен обязателен и должен быть непустой строкой")
@@ -44,7 +50,12 @@ class WBClient:
         self._timeout = timeout
         self._retry_attempts = retry_attempts
         self._retry_backoff = retry_backoff
-        self._base_urls = base_urls or BASE_URLS.copy()
+        if base_urls is not None:
+            self._base_urls = base_urls
+        elif sandbox:
+            self._base_urls = {**BASE_URLS, **SANDBOX_BASE_URLS}
+        else:
+            self._base_urls = BASE_URLS.copy()
         self._rate_limiter = RateLimiter()
         self._http_client = httpx.Client(
             timeout=timeout,

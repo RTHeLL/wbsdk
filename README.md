@@ -76,6 +76,18 @@ funnel = client.analytics.get_sales_funnel_products(
 )
 ```
 
+### Песочница
+
+Для тестирования на случайных данных используйте [песочницу WB](https://dev.wildberries.ru/sandbox). Нужен токен с опцией **«Тестовый контур»** в личном кабинете WB.
+
+```python
+client = WBClient(token="YOUR_SANDBOX_TOKEN", sandbox=True)
+# Дальше вызовы идут на sandbox-хосты (content-api-sandbox, marketplace-api-sandbox и т.д.)
+categories = client.content.get_parent_categories()
+```
+
+В песочнице действуют свои лимиты (например, 1 запрос в секунду для многих разделов).
+
 ---
 
 ## API по модулям
@@ -160,6 +172,7 @@ except WBValidationError:
 ## Документация WB
 
 - [API Wildberries](https://dev.wildberries.ru/)
+- [Песочница](https://dev.wildberries.ru/sandbox)
 - [Работа с товарами](https://dev.wildberries.ru/openapi/work-with-products)
 - [Заказы FBS](https://dev.wildberries.ru/openapi/orders-fbs)
 - [Аналитика](https://dev.wildberries.ru/openapi/analytics)

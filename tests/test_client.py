@@ -64,6 +64,38 @@ def test_client_analytics_api(token: str) -> None:
         assert analytics is not None
 
 
+def test_client_content_api_sandbox(token: str) -> None:
+    """При sandbox=True ContentAPI использует sandbox URL."""
+    with WBClient(token=token, sandbox=True) as client:
+        content = client.content
+        assert content._base_url == "https://content-api-sandbox.wildberries.ru"
+
+
+@respx.mock
+def test_sandbox_request_goes_to_sandbox_url(token: str) -> None:
+    """При sandbox=True запрос уходит на content-api-sandbox."""
+    route = respx.get(
+        "https://content-api-sandbox.wildberries.ru/content/v2/object/parent/all"
+    ).mock(
+        return_value=respx.MockResponse(200, json={"data": [], "error": False})
+    )
+    with WBClient(token=token, sandbox=True) as client:
+        client.content.get_parent_categories()
+    assert route.called
+
+
+def test_base_urls_override_sandbox(token: str) -> None:
+    """При явном base_urls параметр sandbox не меняет URL (приоритет у base_urls)."""
+    custom_url = "https://custom-content.example"
+    with WBClient(
+        token=token,
+        sandbox=True,
+        base_urls={"content": custom_url},
+    ) as client:
+        content = client.content
+        assert content._base_url == custom_url
+
+
 @respx.mock
 def test_request_adds_authorization(token: str) -> None:
     """Запрос добавляет заголовок Authorization."""
