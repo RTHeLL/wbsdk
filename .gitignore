@@ -126,3 +126,6 @@ celerybeat.pid
 
 # Cursor
 .cursor/
+
+# Other
+scripts/
