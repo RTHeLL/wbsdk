@@ -1,6 +1,6 @@
 # WB SDK
 
-[![PyPI version](https://img.shields.io/pypi/v/wbsdk.svg)](https://pypi.org/project/wbsdk/)
+[![PyPI version](https://img.shields.io/pypi/v/wbsdk)](https://pypi.org/project/wbsdk/)
 [![Python versions](https://img.shields.io/pypi/pyversions/wbsdk.svg)](https://pypi.org/project/wbsdk/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/RTHeLL/wbsdk/actions/workflows/publish.yml/badge.svg)](https://github.com/RTHeLL/wbsdk/actions)
