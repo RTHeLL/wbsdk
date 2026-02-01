@@ -41,8 +41,8 @@ dev = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/wbsdk/wbsdk#readme"
-Repository = "https://github.com/wbsdk/wbsdk"
+Documentation = "https://github.com/RTHeLL/wbsdk#readme"
+Repository = "https://github.com/RTHeLL/wbsdk"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/wbsdk"]
