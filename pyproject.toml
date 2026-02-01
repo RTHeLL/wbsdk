@@ -10,7 +10,7 @@ readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [
-    { name = "RTHeLL / Kinder"}
+    { name = "RTHeLL / Kinder"},
     { name = "WB SDK Contributors" }
 ]
 keywords = ["wildberries", "api", "sdk", "marketplace"]
