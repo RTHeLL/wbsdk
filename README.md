@@ -36,7 +36,7 @@ pip install wbsdk
 Или из исходников:
 
 ```bash
-git clone https://github.com/wbsdk/wbsdk.git
+git clone https://github.com/RTHeLL/wbsdk.git
 cd wbsdk
 pip install -e .
 ```
