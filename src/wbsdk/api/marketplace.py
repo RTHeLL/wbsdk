@@ -3,6 +3,27 @@
 from typing import Any
 
 from wbsdk.api.base import BaseAPI
+from wbsdk.schemas.marketplace import (
+    BarcodeResponse,
+    CrossBorderStickersResponse,
+    OrderMetaResponse,
+    OrdersClientInfoResponse,
+    OrdersNewResponse,
+    OrdersResponse,
+    OrdersStatusResponse,
+    Pass,
+    PassCreateResponse,
+    PassOffice,
+    ReshipmentResponse,
+    StickersResponse,
+    SupplyBoxesResponse,
+    SupplyCreateResponse,
+    SupplyOrderIdsResponse,
+    SuppliesResponse,
+    Supply,
+    TrbxIdsResponse,
+    TrbxStickersResponse,
+)
 
 
 class MarketplaceAPI(BaseAPI):
@@ -13,9 +34,9 @@ class MarketplaceAPI(BaseAPI):
 
     # --- Заказы ---
 
-    def get_new_orders(self) -> Any:
+    def get_new_orders(self) -> OrdersNewResponse:
         """Новые сборочные задания."""
-        return self.get("/api/v3/orders/new")
+        return self.get("/api/v3/orders/new", response_model=OrdersNewResponse)
 
     def get_orders(
         self,
@@ -24,22 +45,29 @@ class MarketplaceAPI(BaseAPI):
         *,
         date_from: int | None = None,
         date_to: int | None = None,
-    ) -> Any:
+    ) -> OrdersResponse:
         """Список сборочных заданий за период (макс. 30 дней)."""
         params: dict[str, Any] = {"limit": limit, "next": next_cursor}
         if date_from is not None:
             params["dateFrom"] = date_from
         if date_to is not None:
             params["dateTo"] = date_to
-        return self.get("/api/v3/orders", params=params)
+        return self.get("/api/v3/orders", params=params, response_model=OrdersResponse)
 
-    def get_orders_status(self, order_ids: list[int]) -> Any:
+    def get_orders_status(self, order_ids: list[int]) -> OrdersStatusResponse:
         """Статусы сборочных заданий."""
-        return self.post("/api/v3/orders/status", json={"orders": order_ids})
+        return self.post(
+            "/api/v3/orders/status",
+            json={"orders": order_ids},
+            response_model=OrdersStatusResponse,
+        )
 
-    def get_orders_reshipment(self) -> Any:
+    def get_orders_reshipment(self) -> ReshipmentResponse:
         """Заказы, требующие переотправки."""
-        return self.get("/api/v3/supplies/orders/reshipment")
+        return self.get(
+            "/api/v3/supplies/orders/reshipment",
+            response_model=ReshipmentResponse,
+        )
 
     def cancel_order(self, order_id: int) -> None:
         """Отмена сборочного задания."""
@@ -52,27 +80,40 @@ class MarketplaceAPI(BaseAPI):
         sticker_type: str = "svg",
         width: int = 58,
         height: int = 40,
-    ) -> Any:
+    ) -> StickersResponse:
         """Стикеры для заказов (svg, zplv, zplh, png)."""
         return self.post(
             "/api/v3/orders/stickers",
             params={"type": sticker_type, "width": width, "height": height},
             json={"orders": order_ids},
+            response_model=StickersResponse,
         )
 
-    def get_cross_border_stickers(self, order_ids: list[int]) -> Any:
+    def get_cross_border_stickers(self, order_ids: list[int]) -> CrossBorderStickersResponse:
         """Стикеры для кросс-бордер заказов (PDF)."""
-        return self.post("/api/v3/orders/stickers/cross-border", json={"orders": order_ids})
+        return self.post(
+            "/api/v3/orders/stickers/cross-border",
+            json={"orders": order_ids},
+            response_model=CrossBorderStickersResponse,
+        )
 
-    def get_orders_client_info(self, order_ids: list[int]) -> Any:
+    def get_orders_client_info(self, order_ids: list[int]) -> OrdersClientInfoResponse:
         """Информация о клиенте по заказам (кросс-бордер Турция)."""
-        return self.post("/api/v3/orders/client", json={"orders": order_ids})
+        return self.post(
+            "/api/v3/orders/client",
+            json={"orders": order_ids},
+            response_model=OrdersClientInfoResponse,
+        )
 
     # --- Метаданные заказов ---
 
-    def get_orders_metadata(self, order_ids: list[int]) -> Any:
+    def get_orders_metadata(self, order_ids: list[int]) -> OrderMetaResponse:
         """Метаданные заказов."""
-        return self.post("/api/marketplace/v3/orders/meta", json={"orders": order_ids})
+        return self.post(
+            "/api/marketplace/v3/orders/meta",
+            json={"orders": order_ids},
+            response_model=OrderMetaResponse,
+        )
 
     def delete_order_metadata(self, order_id: int, *, key: str | None = None) -> None:
         """Удаление метаданных заказа."""
@@ -110,13 +151,21 @@ class MarketplaceAPI(BaseAPI):
 
     # --- Поставки ---
 
-    def create_supply(self, name: str) -> Any:
+    def create_supply(self, name: str) -> SupplyCreateResponse:
         """Создание поставки."""
-        return self.post("/api/v3/supplies", json={"name": name})
+        return self.post(
+            "/api/v3/supplies",
+            json={"name": name},
+            response_model=SupplyCreateResponse,
+        )
 
-    def get_supplies(self, limit: int, next_cursor: int) -> Any:
+    def get_supplies(self, limit: int, next_cursor: int) -> SuppliesResponse:
         """Список поставок."""
-        return self.get("/api/v3/supplies", params={"limit": limit, "next": next_cursor})
+        return self.get(
+            "/api/v3/supplies",
+            params={"limit": limit, "next": next_cursor},
+            response_model=SuppliesResponse,
+        )
 
     def add_orders_to_supply(self, supply_id: str, order_ids: list[int]) -> None:
         """Добавление заказов в поставку."""
@@ -125,36 +174,52 @@ class MarketplaceAPI(BaseAPI):
             json={"orders": order_ids},
         )
 
-    def get_supply_details(self, supply_id: str) -> Any:
+    def get_supply_details(self, supply_id: str) -> Supply:
         """Детали поставки."""
-        return self.get(f"/api/v3/supplies/{supply_id}")
+        return self.get(
+            f"/api/v3/supplies/{supply_id}",
+            response_model=Supply,
+        )
 
     def delete_supply(self, supply_id: str) -> None:
         """Удаление поставки (если пуста)."""
         self.delete(f"/api/v3/supplies/{supply_id}")
 
-    def get_supply_order_ids(self, supply_id: str) -> Any:
+    def get_supply_order_ids(self, supply_id: str) -> SupplyOrderIdsResponse:
         """ID заказов в поставке."""
-        return self.get(f"/api/marketplace/v3/supplies/{supply_id}/order-ids")
+        return self.get(
+            f"/api/marketplace/v3/supplies/{supply_id}/order-ids",
+            response_model=SupplyOrderIdsResponse,
+        )
 
     def deliver_supply(self, supply_id: str) -> None:
         """Перевод поставки в доставку."""
         self.patch(f"/api/v3/supplies/{supply_id}/deliver")
 
-    def get_supply_barcode(self, supply_id: str, *, barcode_type: str = "svg") -> Any:
+    def get_supply_barcode(
+        self, supply_id: str, *, barcode_type: str = "svg"
+    ) -> BarcodeResponse:
         """QR-код поставки."""
         return self.get(
             f"/api/v3/supplies/{supply_id}/barcode",
             params={"type": barcode_type},
+            response_model=BarcodeResponse,
         )
 
-    def get_supply_boxes(self, supply_id: str) -> Any:
+    def get_supply_boxes(self, supply_id: str) -> SupplyBoxesResponse:
         """Список коробок поставки."""
-        return self.get(f"/api/v3/supplies/{supply_id}/trbx")
+        return self.get(
+            f"/api/v3/supplies/{supply_id}/trbx",
+            response_model=SupplyBoxesResponse,
+        )
 
-    def add_boxes_to_supply(self, supply_id: str, amount: int) -> Any:
+    def add_boxes_to_supply(self, supply_id: str, amount: int) -> TrbxIdsResponse:
         """Добавление коробок в поставку."""
-        return self.post(f"/api/v3/supplies/{supply_id}/trbx", json={"amount": amount})
+        return self.post(
+            f"/api/v3/supplies/{supply_id}/trbx",
+            json={"amount": amount},
+            response_model=TrbxIdsResponse,
+        )
 
     def delete_boxes_from_supply(self, supply_id: str, trbx_ids: list[str]) -> None:
         """Удаление коробок из поставки."""
@@ -169,23 +234,30 @@ class MarketplaceAPI(BaseAPI):
         trbx_ids: list[str],
         *,
         sticker_type: str = "svg",
-    ) -> Any:
+    ) -> TrbxStickersResponse:
         """Стикеры коробок поставки."""
         return self.post(
             f"/api/v3/supplies/{supply_id}/trbx/stickers",
             params={"type": sticker_type},
             json={"trbxIds": trbx_ids},
+            response_model=TrbxStickersResponse,
         )
 
     # --- Пропуска ---
 
-    def get_passes_offices(self) -> Any:
+    def get_passes_offices(self) -> list[PassOffice]:
         """Офисы, требующие пропуск."""
-        return self.get("/api/v3/passes/offices")
+        return self.get(
+            "/api/v3/passes/offices",
+            response_model=list[PassOffice],
+        )
 
-    def get_passes(self) -> Any:
+    def get_passes(self) -> list[Pass]:
         """Список пропусков."""
-        return self.get("/api/v3/passes")
+        return self.get(
+            "/api/v3/passes",
+            response_model=list[Pass],
+        )
 
     def create_pass(
         self,
@@ -194,7 +266,7 @@ class MarketplaceAPI(BaseAPI):
         car_model: str,
         car_number: str,
         office_id: int,
-    ) -> Any:
+    ) -> PassCreateResponse:
         """Создание пропуска."""
         return self.post(
             "/api/v3/passes",
@@ -205,6 +277,7 @@ class MarketplaceAPI(BaseAPI):
                 "carNumber": car_number,
                 "officeId": office_id,
             },
+            response_model=PassCreateResponse,
         )
 
     def update_pass(

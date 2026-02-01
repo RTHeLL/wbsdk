@@ -4,6 +4,7 @@ import pytest
 import respx
 
 from wbsdk import WBClient
+from wbsdk.schemas import SubjectsResponse, TagsResponse
 
 
 @pytest.fixture
@@ -26,8 +27,9 @@ def test_get_subjects(client: WBClient) -> None:
         )
     )
     result = client.content.get_subjects(limit=10, offset=0)
-    assert "data" in result
-    assert result["data"][0]["subjectName"] == "Кроссовки"
+    assert isinstance(result, SubjectsResponse)
+    assert len(result.data) == 1
+    assert result.data[0].subject_name == "Кроссовки"
 
 
 @respx.mock
@@ -40,8 +42,9 @@ def test_get_tags(client: WBClient) -> None:
         )
     )
     result = client.content.get_tags()
-    assert "data" in result
-    assert result["data"][0]["name"] == "Sale"
+    assert isinstance(result, TagsResponse)
+    assert len(result.data) == 1
+    assert result.data[0].name == "Sale"
 
 
 @respx.mock
@@ -51,4 +54,5 @@ def test_create_tag(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json={"data": None, "error": False})
     )
     result = client.content.create_tag(name="NewTag", color="D1CFD7")
-    assert result is not None or result is None  # 200 может вернуть пусто
+    assert result is not None
+    assert result.error is False

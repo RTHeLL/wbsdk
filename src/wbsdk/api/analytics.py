@@ -3,6 +3,17 @@
 from typing import Any
 
 from wbsdk.api.base import BaseAPI
+from wbsdk.schemas.analytics import (
+    NmReportCreateResponse,
+    NmReportRetryResponse,
+    NmReportsListResponse,
+    SalesFunnelGroupedResponse,
+    SalesFunnelHistoryResponse,
+    SalesFunnelProductsResponse,
+    SearchReportResponse,
+    StocksGroupsResponse,
+    StocksProductsResponse,
+)
 
 
 class AnalyticsAPI(BaseAPI):
@@ -26,7 +37,7 @@ class AnalyticsAPI(BaseAPI):
         order_by: dict | None = None,
         limit: int = 50,
         offset: int = 0,
-    ) -> Any:
+    ) -> SalesFunnelProductsResponse:
         """Статистика по карточкам за период."""
         payload: dict[str, Any] = {
             "selectedPeriod": selected_period,
@@ -46,7 +57,11 @@ class AnalyticsAPI(BaseAPI):
             payload["tagIds"] = tag_ids
         if order_by:
             payload["orderBy"] = order_by
-        return self.post("/api/analytics/v3/sales-funnel/products", json=payload)
+        return self.post(
+            "/api/analytics/v3/sales-funnel/products",
+            json=payload,
+            response_model=SalesFunnelProductsResponse,
+        )
 
     def get_sales_funnel_products_history(
         self,
@@ -55,7 +70,7 @@ class AnalyticsAPI(BaseAPI):
         *,
         skip_deleted_nm: bool = False,
         aggregation_level: str = "day",
-    ) -> Any:
+    ) -> SalesFunnelHistoryResponse:
         """Статистика по карточкам по дням/неделям (макс. 20 nm_ids, 7 дней)."""
         return self.post(
             "/api/analytics/v3/sales-funnel/products/history",
@@ -65,6 +80,7 @@ class AnalyticsAPI(BaseAPI):
                 "skipDeletedNm": skip_deleted_nm,
                 "aggregationLevel": aggregation_level,
             },
+            response_model=SalesFunnelHistoryResponse,
         )
 
     def get_sales_funnel_grouped_history(
@@ -76,7 +92,7 @@ class AnalyticsAPI(BaseAPI):
         tag_ids: list[int] | None = None,
         skip_deleted_nm: bool = False,
         aggregation_level: str = "day",
-    ) -> Any:
+    ) -> SalesFunnelGroupedResponse:
         """Статистика по группам (субъект, бренд, тег) по дням."""
         payload: dict[str, Any] = {
             "selectedPeriod": selected_period,
@@ -89,7 +105,11 @@ class AnalyticsAPI(BaseAPI):
             payload["subjectIds"] = subject_ids
         if tag_ids is not None:
             payload["tagIds"] = tag_ids
-        return self.post("/api/analytics/v3/sales-funnel/grouped/history", json=payload)
+        return self.post(
+            "/api/analytics/v3/sales-funnel/grouped/history",
+            json=payload,
+            response_model=SalesFunnelGroupedResponse,
+        )
 
     # --- Поисковые запросы (требует Jam) ---
 
@@ -108,7 +128,7 @@ class AnalyticsAPI(BaseAPI):
         position_cluster: str = "all",
         include_substituted_skus: bool = True,
         include_search_texts: bool = True,
-    ) -> Any:
+    ) -> SearchReportResponse:
         """Основная страница отчёта по поисковым запросам."""
         payload: dict[str, Any] = {
             "currentPeriod": current_period,
@@ -129,7 +149,11 @@ class AnalyticsAPI(BaseAPI):
             payload["brandNames"] = brand_names
         if tag_ids is not None:
             payload["tagIds"] = tag_ids
-        return self.post("/api/v2/search-report/report", json=payload)
+        return self.post(
+            "/api/v2/search-report/report",
+            json=payload,
+            response_model=SearchReportResponse,
+        )
 
     # --- Отчёты по остаткам ---
 
@@ -147,7 +171,7 @@ class AnalyticsAPI(BaseAPI):
         brand_names: list[str] | None = None,
         tag_ids: list[int] | None = None,
         limit: int = 100,
-    ) -> Any:
+    ) -> StocksGroupsResponse:
         """Данные по остаткам по группам. stock_type: '' | 'wb' | 'mp'."""
         payload: dict[str, Any] = {
             "currentPeriod": current_period,
@@ -166,7 +190,11 @@ class AnalyticsAPI(BaseAPI):
             payload["brandNames"] = brand_names
         if tag_ids is not None:
             payload["tagIDs"] = tag_ids
-        return self.post("/api/v2/stocks-report/products/groups", json=payload)
+        return self.post(
+            "/api/v2/stocks-report/products/groups",
+            json=payload,
+            response_model=StocksGroupsResponse,
+        )
 
     def get_stocks_products(
         self,
@@ -182,7 +210,7 @@ class AnalyticsAPI(BaseAPI):
         brand_name: str | None = None,
         tag_id: int | None = None,
         limit: int = 100,
-    ) -> Any:
+    ) -> StocksProductsResponse:
         """Данные по остаткам по товарам."""
         payload: dict[str, Any] = {
             "currentPeriod": current_period,
@@ -201,7 +229,11 @@ class AnalyticsAPI(BaseAPI):
             payload["brandName"] = brand_name
         if tag_id is not None:
             payload["tagID"] = tag_id
-        return self.post("/api/v2/stocks-report/products/products", json=payload)
+        return self.post(
+            "/api/v2/stocks-report/products/products",
+            json=payload,
+            response_model=StocksProductsResponse,
+        )
 
     # --- CSV отчёты ---
 
@@ -212,23 +244,37 @@ class AnalyticsAPI(BaseAPI):
         params: dict,
         *,
         user_report_name: str | None = None,
-    ) -> Any:
+    ) -> NmReportCreateResponse:
         """Создание задачи на генерацию CSV отчёта (макс. 20 в день)."""
         payload: dict[str, Any] = {"id": report_id, "reportType": report_type, "params": params}
         if user_report_name:
             payload["userReportName"] = user_report_name
-        return self.post("/api/v2/nm-report/downloads", json=payload)
+        return self.post(
+            "/api/v2/nm-report/downloads",
+            json=payload,
+            response_model=NmReportCreateResponse,
+        )
 
-    def get_nm_reports_list(self, *, download_ids: list[str] | None = None) -> Any:
+    def get_nm_reports_list(
+        self, *, download_ids: list[str] | None = None
+    ) -> NmReportsListResponse:
         """Список отчётов и их статусов."""
-        params = {}
+        params: dict[str, Any] = {}
         if download_ids:
             params["filter[downloadIds]"] = download_ids
-        return self.get("/api/v2/nm-report/downloads", params=params or None)
+        return self.get(
+            "/api/v2/nm-report/downloads",
+            params=params or None,
+            response_model=NmReportsListResponse,
+        )
 
-    def retry_nm_report(self, download_id: str) -> Any:
+    def retry_nm_report(self, download_id: str) -> NmReportRetryResponse:
         """Повторная генерация отчёта при статусе FAILED."""
-        return self.post("/api/v2/nm-report/downloads/retry", json={"downloadId": download_id})
+        return self.post(
+            "/api/v2/nm-report/downloads/retry",
+            json={"downloadId": download_id},
+            response_model=NmReportRetryResponse,
+        )
 
     def get_nm_report_file(self, download_id: str) -> bytes:
         """Скачивание готового отчёта (доступен 48 ч)."""

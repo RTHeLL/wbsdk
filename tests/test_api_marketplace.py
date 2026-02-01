@@ -4,6 +4,7 @@ import pytest
 import respx
 
 from wbsdk import WBClient
+from wbsdk.schemas import PassOffice
 
 
 @pytest.fixture
@@ -18,8 +19,7 @@ def test_get_new_orders(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json={"orders": []})
     )
     result = client.marketplace.get_new_orders()
-    assert "orders" in result
-    assert result["orders"] == []
+    assert result.orders == []
 
 
 @respx.mock
@@ -29,7 +29,7 @@ def test_create_supply(client: WBClient) -> None:
         return_value=respx.MockResponse(201, json={"id": "WB-GI-1234567"})
     )
     result = client.marketplace.create_supply(name="Test Supply")
-    assert result["id"] == "WB-GI-1234567"
+    assert result.id == "WB-GI-1234567"
 
 
 @respx.mock
@@ -40,4 +40,5 @@ def test_get_passes_offices(client: WBClient) -> None:
     )
     result = client.marketplace.get_passes_offices()
     assert isinstance(result, list)
-    assert result[0]["name"] == "Office"
+    assert all(isinstance(x, PassOffice) for x in result)
+    assert result[0].name == "Office"

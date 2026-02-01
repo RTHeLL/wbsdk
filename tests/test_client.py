@@ -145,6 +145,6 @@ def test_content_get_parent_categories(token: str) -> None:
     )
     with WBClient(token=token) as client:
         result = client.content.get_parent_categories()
-    assert "data" in result
-    assert len(result["data"]) == 1
-    assert result["data"][0]["name"] == "Категория"
+    assert result.data is not None
+    assert len(result.data) == 1
+    assert result.data[0].name == "Категория"

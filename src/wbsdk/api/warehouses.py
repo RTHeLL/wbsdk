@@ -3,6 +3,13 @@
 from typing import Any
 
 from wbsdk.api.base import BaseAPI
+from wbsdk.schemas.warehouses import (
+    Office,
+    StocksResponse,
+    StoreContact,
+    Warehouse,
+    WarehouseCreateResponse,
+)
 
 
 class WarehousesAPI(BaseAPI):
@@ -11,17 +18,21 @@ class WarehousesAPI(BaseAPI):
     def __init__(self, client: Any, base_url: str):
         super().__init__(client, base_url, domain="marketplace")
 
-    def get_offices(self) -> Any:
+    def get_offices(self) -> list[Office]:
         """Список офисов для привязки к складу."""
-        return self.get("/api/v3/offices")
+        return self.get("/api/v3/offices", response_model=list[Office])
 
-    def get_warehouses(self) -> Any:
+    def get_warehouses(self) -> list[Warehouse]:
         """Список складов продавца."""
-        return self.get("/api/v3/warehouses")
+        return self.get("/api/v3/warehouses", response_model=list[Warehouse])
 
-    def create_warehouse(self, name: str, office_id: int) -> Any:
+    def create_warehouse(self, name: str, office_id: int) -> WarehouseCreateResponse:
         """Создание склада."""
-        return self.post("/api/v3/warehouses", json={"name": name, "officeId": office_id})
+        return self.post(
+            "/api/v3/warehouses",
+            json={"name": name, "officeId": office_id},
+            response_model=WarehouseCreateResponse,
+        )
 
     def update_warehouse(self, warehouse_id: int, name: str, office_id: int) -> None:
         """Обновление склада."""
@@ -34,9 +45,12 @@ class WarehousesAPI(BaseAPI):
         """Удаление склада."""
         self.delete(f"/api/v3/warehouses/{warehouse_id}")
 
-    def get_warehouse_contacts(self, warehouse_id: int) -> Any:
+    def get_warehouse_contacts(self, warehouse_id: int) -> list[StoreContact]:
         """Контакты склада (только для DBW)."""
-        return self.get(f"/api/v3/dbw/warehouses/{warehouse_id}/contacts")
+        return self.get(
+            f"/api/v3/dbw/warehouses/{warehouse_id}/contacts",
+            response_model=list[StoreContact],
+        )
 
     def update_warehouse_contacts(
         self,
@@ -75,9 +89,10 @@ class WarehousesAPI(BaseAPI):
         *,
         skip: int = 0,
         take: int = 1000,
-    ) -> Any:
+    ) -> StocksResponse:
         """Получение остатков склада."""
         return self.post(
             f"/api/v3/stocks/{warehouse_id}",
             json={"skip": skip, "take": take},
+            response_model=StocksResponse,
         )

@@ -9,6 +9,12 @@ from wbsdk.exceptions import (
     WBRateLimitError,
     WBValidationError,
 )
+from wbsdk.schemas import (
+    OrdersNewResponse,
+    SupplyCreateResponse,
+    SubjectsResponse,
+    TagsResponse,
+)
 
 __version__ = "0.1.4"
 __all__ = [
@@ -19,4 +25,8 @@ __all__ = [
     "WBNotFoundError",
     "WBRateLimitError",
     "WBValidationError",
+    "OrdersNewResponse",
+    "SupplyCreateResponse",
+    "SubjectsResponse",
+    "TagsResponse",
 ]

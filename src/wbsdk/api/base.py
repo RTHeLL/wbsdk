@@ -1,8 +1,9 @@
 """Базовый класс для API-модулей."""
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, get_args, get_origin
 
 import httpx
+from pydantic import TypeAdapter
 
 from wbsdk.exceptions import (
     WBAPIError,
@@ -25,6 +26,17 @@ class BaseAPI:
         self._base_url = base_url.rstrip("/")
         self._domain = domain
 
+    def _parse_response(self, result: Any, response_model: type) -> Any:
+        """Парсит ответ через Pydantic-модель или TypeAdapter для list."""
+        if result is None:
+            return None
+        origin = get_origin(response_model)
+        if origin is list:
+            item_model = get_args(response_model)[0]
+            adapter = TypeAdapter(list[item_model])
+            return adapter.validate_python(result)
+        return response_model.model_validate(result)
+
     def _request(
         self,
         method: str,
@@ -35,9 +47,10 @@ class BaseAPI:
         data: Any = None,
         files: dict | None = None,
         headers: dict[str, str] | None = None,
+        response_model: type | None = None,
     ) -> Any:
         """Выполняет HTTP-запрос к API."""
-        return self._client.request(
+        result = self._client.request(
             method=method,
             url=f"{self._base_url}{path}",
             params=params,
@@ -47,6 +60,9 @@ class BaseAPI:
             headers=headers,
             domain=self._domain,
         )
+        if response_model is not None and result is not None:
+            return self._parse_response(result, response_model)
+        return result
 
     def _raise_for_status(self, response: httpx.Response) -> None:
         """Преобразует HTTP-ошибки в исключения SDK."""
@@ -74,9 +90,16 @@ class BaseAPI:
             response_data=data,
         )
 
-    def get(self, path: str, *, params: dict[str, Any] | None = None, **kwargs: Any) -> Any:
+    def get(
+        self,
+        path: str,
+        *,
+        params: dict[str, Any] | None = None,
+        response_model: type | None = None,
+        **kwargs: Any,
+    ) -> Any:
         """GET-запрос."""
-        return self._request("GET", path, params=params, **kwargs)
+        return self._request("GET", path, params=params, response_model=response_model, **kwargs)
 
     def post(
         self,
@@ -86,10 +109,20 @@ class BaseAPI:
         json: dict | list | None = None,
         data: Any = None,
         files: dict | None = None,
+        response_model: type | None = None,
         **kwargs: Any,
     ) -> Any:
         """POST-запрос."""
-        return self._request("POST", path, params=params, json=json, data=data, files=files, **kwargs)
+        return self._request(
+            "POST",
+            path,
+            params=params,
+            json=json,
+            data=data,
+            files=files,
+            response_model=response_model,
+            **kwargs,
+        )
 
     def put(
         self,
@@ -97,10 +130,13 @@ class BaseAPI:
         *,
         params: dict[str, Any] | None = None,
         json: dict | None = None,
+        response_model: type | None = None,
         **kwargs: Any,
     ) -> Any:
         """PUT-запрос."""
-        return self._request("PUT", path, params=params, json=json, **kwargs)
+        return self._request(
+            "PUT", path, params=params, json=json, response_model=response_model, **kwargs
+        )
 
     def patch(
         self,
@@ -108,11 +144,23 @@ class BaseAPI:
         *,
         params: dict[str, Any] | None = None,
         json: dict | None = None,
+        response_model: type | None = None,
         **kwargs: Any,
     ) -> Any:
         """PATCH-запрос."""
-        return self._request("PATCH", path, params=params, json=json, **kwargs)
+        return self._request(
+            "PATCH", path, params=params, json=json, response_model=response_model, **kwargs
+        )
 
-    def delete(self, path: str, *, params: dict[str, Any] | None = None, **kwargs: Any) -> Any:
+    def delete(
+        self,
+        path: str,
+        *,
+        params: dict[str, Any] | None = None,
+        response_model: type | None = None,
+        **kwargs: Any,
+    ) -> Any:
         """DELETE-запрос."""
-        return self._request("DELETE", path, params=params, **kwargs)
+        return self._request(
+            "DELETE", path, params=params, response_model=response_model, **kwargs
+        )
