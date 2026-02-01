@@ -4,12 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "wbsdk"
-version = "0.1.0"
-description = "Профессиональный Python SDK для Wildberries API"
+version = "0.1.1"
+description = "Python SDK для Wildberries API"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
 authors = [
+    { name = "RTHeLL / Kinder"}
     { name = "WB SDK Contributors" }
 ]
 keywords = ["wildberries", "api", "sdk", "marketplace"]
