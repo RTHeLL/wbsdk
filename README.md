@@ -24,6 +24,7 @@ Python SDK для работы с [API Wildberries](https://dev.wildberries.ru/)
 - Rate limiting по лимитам каждого API-домена WB
 - Retry с exponential backoff при 429 (Too Many Requests)
 - Типизированные исключения (401, 403, 422, 429 и др.)
+- **Типизированные ответы** — методы возвращают Pydantic-объекты вместо словарей
 
 ---
 
@@ -52,8 +53,8 @@ from wbsdk import WBClient
 
 client = WBClient(token="YOUR_API_TOKEN")
 
-# Категории и карточки
-categories = client.content.get_parent_categories()
+# Категории и карточки (возвращаются Pydantic-объекты)
+categories = client.content.get_parent_categories()  # ParentCategoriesResponse
 cards = client.content.get_cards_list(settings={
     "cursor": {"limit": 100},
     "sort": {"ascending": True},
@@ -63,8 +64,9 @@ cards = client.content.get_cards_list(settings={
 client.prices.set_prices([{"nmID": 123, "price": 999, "discount": 30}])
 
 # Заказы FBS
-orders = client.marketplace.get_new_orders()
-supply = client.marketplace.create_supply(name="Поставка 1")
+orders = client.marketplace.get_new_orders()  # OrdersNewResponse
+supply = client.marketplace.create_supply(name="Поставка 1")  # SupplyCreateResponse
+print(supply.id)  # доступ к полям через атрибуты (snake_case)
 
 # Склады и остатки
 warehouses = client.warehouses.get_warehouses()
@@ -87,6 +89,32 @@ categories = client.content.get_parent_categories()
 ```
 
 В песочнице действуют свои лимиты (например, 1 запрос в секунду для многих разделов).
+
+---
+
+## Типизированные ответы
+
+Методы API возвращают **Pydantic-объекты**, а не сырые словари или списки. Все поля — в snake_case.
+
+```python
+# Доступ к данным через атрибуты
+categories = client.content.get_parent_categories()
+for cat in categories.data:
+    print(cat.name, cat.parent_id)
+
+orders = client.marketplace.get_new_orders()
+for order in orders.orders:
+    print(order.id, order.nm_id, order.price)
+
+supply = client.marketplace.create_supply(name="Тест")
+print(supply.id)  # WB-GI-1234567
+
+tags = client.content.get_tags()
+for tag in tags.data:
+    print(tag.id, tag.name, tag.color)
+```
+
+Схемы доступны в `wbsdk.schemas` для аннотаций и кастомной логики.
 
 ---
 
