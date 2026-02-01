@@ -1,38 +1,40 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: Сообщить об ошибке в работе SDK
 title: ''
-labels: ''
+labels: bug
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+**Описание бага**
+Кратко опишите, что происходит и при каких условиях.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Окружение**
+- Python: [например 3.11]
+- wbsdk: [например 0.1.0 — укажите `pip show wbsdk`]
+- ОС: [по желанию, например Windows 11 / Ubuntu 22.04]
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Область**
+Какой модуль или часть SDK затронуты: content / prices / marketplace / warehouses / analytics / client / другое.
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+**Как воспроизвести**
+Шаги или минимальный фрагмент кода (без реального API-токена), при котором ошибка воспроизводится.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+```python
+# минимальный пример
+```
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+**Ожидаемое поведение**
+Что вы ожидали увидеть или получить.
 
-**Additional context**
-Add any other context about the problem here.
+**Фактическое поведение**
+Что происходит на самом деле. Если есть исключение — приведите полный traceback в блоке кода:
+
+```
+Traceback (most recent call last):
+  ...
+```
+
+**Дополнительно**
+По желанию: скриншоты, логи, ссылки на документацию API WB.

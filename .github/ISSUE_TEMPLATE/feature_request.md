@@ -1,20 +1,23 @@
 ---
 name: Feature request
-about: Suggest an idea for this project
+about: Предложить идею или улучшение для SDK
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Область (модуль)**
+К чему относится запрос: content / prices / marketplace / warehouses / analytics / client / документация / другое.
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+**Связано ли с проблемой?**
+Кратко опишите проблему или ограничение. Например: «Неудобно, когда …» или «Сейчас нельзя …».
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+**Желаемое решение**
+Опишите, как вы хотите, чтобы это работало.
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+**Рассмотренные альтернативы**
+Какие другие варианты вы рассматривали (если есть).
+
+**Дополнительно**
+Любой другой контекст, примеры использования или ссылки на документацию API WB.

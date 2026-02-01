@@ -1,10 +1,17 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
+name: Вопрос / обсуждение
+about: Задать вопрос или обсудить использование SDK
 title: ''
 labels: ''
 assignees: ''
 
 ---
 
+**Тема**
+О чём вопрос или что хотите обсудить.
 
+**Контекст**
+Опишите ситуацию: что делаете, какой результат нужен, что уже пробовали.
+
+**Что уже смотрели**
+Например: [документация API Wildberries](https://dev.wildberries.ru/), README, примеры в репозитории — и что осталось непонятно.
