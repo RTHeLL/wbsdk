@@ -1,10 +1,12 @@
 """Базовый класс для API-модулей."""
 
-from typing import TYPE_CHECKING, Any, get_args, get_origin
+import inspect
+from typing import Any, get_args, get_origin
 
 import httpx
 from pydantic import TypeAdapter
 
+from wbsdk._protocols import RequestClientProtocol
 from wbsdk.exceptions import (
     WBAPIError,
     WBConflictError,
@@ -14,14 +16,16 @@ from wbsdk.exceptions import (
     WBValidationError,
 )
 
-if TYPE_CHECKING:
-    from wbsdk.client import WBClient
-
 
 class BaseAPI:
     """Базовый класс для всех API-модулей."""
 
-    def __init__(self, client: "WBClient", base_url: str, domain: str = "marketplace"):
+    def __init__(
+        self,
+        client: RequestClientProtocol,
+        base_url: str,
+        domain: str = "marketplace",
+    ):
         self._client = client
         self._base_url = base_url.rstrip("/")
         self._domain = domain
@@ -49,7 +53,7 @@ class BaseAPI:
         headers: dict[str, str] | None = None,
         response_model: type | None = None,
     ) -> Any:
-        """Выполняет HTTP-запрос к API."""
+        """Выполняет HTTP-запрос к API. При async-клиенте возвращает корутину."""
         result = self._client.request(
             method=method,
             url=f"{self._base_url}{path}",
@@ -60,6 +64,15 @@ class BaseAPI:
             headers=headers,
             domain=self._domain,
         )
+        if inspect.iscoroutine(result):
+            # AsyncWBClient: оборачиваем в корутину с парсингом после await
+            async def _await_and_parse() -> Any:
+                raw = await result
+                if response_model is not None and raw is not None:
+                    return self._parse_response(raw, response_model)
+                return raw
+
+            return _await_and_parse()
         if response_model is not None and result is not None:
             return self._parse_response(result, response_model)
         return result

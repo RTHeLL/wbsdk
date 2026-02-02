@@ -1,5 +1,6 @@
 """Адаптивный rate limiter по доменам WB API."""
 
+import asyncio
 import threading
 import time
 from collections import deque
@@ -71,5 +72,47 @@ class RateLimiter:
                 elapsed = now - last
                 if elapsed < min_interval_sec:
                     time.sleep(min_interval_sec - elapsed)
+
+            queue.append(time.monotonic())
+
+
+class AsyncRateLimiter:
+    """Асинхронный ограничитель частоты запросов с поддержкой нескольких доменов."""
+
+    def __init__(self, limits: dict[str, RateLimitConfig] | None = None):
+        self._limits = limits or DEFAULT_LIMITS.copy()
+        self._lock = asyncio.Lock()
+        self._request_times: dict[str, deque[float]] = {}
+
+    def _get_queue(self, domain: str) -> deque[float]:
+        """Возвращает очередь времени запросов для домена."""
+        if domain not in self._request_times:
+            self._request_times[domain] = deque(maxlen=1000)
+        return self._request_times[domain]
+
+    async def acquire(self, domain: str = "marketplace") -> None:
+        """Ожидает разрешения на запрос по лимиту домена (не блокирует event loop)."""
+        config = self._limits.get(domain, self._limits["marketplace"])
+        min_interval_sec = config.min_interval_ms / 1000.0
+
+        async with self._lock:
+            now = time.monotonic()
+            queue = self._get_queue(domain)
+
+            cutoff = now - config.period_seconds
+            while queue and queue[0] < cutoff:
+                queue.popleft()
+
+            if len(queue) >= config.requests_per_period:
+                sleep_time = queue[0] + config.period_seconds - now
+                if sleep_time > 0:
+                    await asyncio.sleep(sleep_time)
+                return await self.acquire(domain)
+
+            if queue:
+                last = queue[-1]
+                elapsed = now - last
+                if elapsed < min_interval_sec:
+                    await asyncio.sleep(min_interval_sec - elapsed)
 
             queue.append(time.monotonic())

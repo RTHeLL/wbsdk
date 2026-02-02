@@ -1,12 +1,13 @@
 """
-Примеры использования WB SDK.
+Примеры использования WB SDK (WBClient и AsyncWBClient).
 
 Перед запуском установите переменную окружения WB_TOKEN с вашим API-токеном.
 """
 
+import asyncio
 import os
 
-from wbsdk import WBClient
+from wbsdk import AsyncWBClient, WBClient
 
 # Токен можно передать напрямую или получить из переменной окружения
 token = os.environ.get("WB_TOKEN", "YOUR_TOKEN_HERE")
@@ -60,6 +61,14 @@ def example_warehouses() -> None:
         print("Склады:", warehouses)
 
 
+async def example_async_content() -> None:
+    """Асинхронный пример."""
+    async with AsyncWBClient(token=token) as client:
+        categories = await client.content.get_parent_categories()
+        print("Категории (async):", categories)
+
+
 if __name__ == "__main__":
     print("Примеры WB SDK. Замените token на свой для тестирования.")
     # example_content()
+    # asyncio.run(example_async_content())

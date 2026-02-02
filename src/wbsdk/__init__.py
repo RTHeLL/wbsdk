@@ -1,5 +1,6 @@
-"""WB SDK — профессиональный Python SDK для Wildberries API."""
+"""WB SDK — Python SDK для Wildberries API."""
 
+from wbsdk.async_client import AsyncWBClient
 from wbsdk.client import WBClient
 from wbsdk.exceptions import (
     WBAPIError,
@@ -18,6 +19,7 @@ from wbsdk.schemas import (
 
 __version__ = "0.2.2"
 __all__ = [
+    "AsyncWBClient",
     "WBClient",
     "WBAPIError",
     "WBAuthError",

@@ -21,6 +21,7 @@ Python SDK для работы с [API Wildberries](https://dev.wildberries.ru/)
 
 **Встроенные механизмы:**
 
+- **Синхронный и асинхронный клиенты** — `WBClient` и `AsyncWBClient`
 - Rate limiting по лимитам каждого API-домена WB
 - Retry с exponential backoff при 429 (Too Many Requests)
 - Типизированные исключения (401, 403, 422, 429 и др.)
@@ -47,6 +48,8 @@ pip install -e .
 ---
 
 ## Быстрый старт
+
+Доступны **синхронный** (`WBClient`) и **асинхронный** (`AsyncWBClient`) клиенты
 
 ```python
 from wbsdk import WBClient
@@ -89,6 +92,26 @@ categories = client.content.get_parent_categories()
 ```
 
 В песочнице действуют свои лимиты (например, 1 запрос в секунду для многих разделов).
+
+### Асинхронный клиент
+
+Для неблокирующих запросов используйте `AsyncWBClient`.
+
+```python
+import asyncio
+from wbsdk import AsyncWBClient
+
+async def main():
+    async with AsyncWBClient(token="YOUR_API_TOKEN") as client:
+        categories = await client.content.get_parent_categories()
+        orders = await client.marketplace.get_new_orders()
+        # Те же методы, что у WBClient — с await
+    # Клиент корректно закрыт (async with или await client.close())
+
+asyncio.run(main())
+```
+
+Используйте `async with` или явный `await client.close()` после работы, чтобы закрыть HTTP-соединения.
 
 ---
 
@@ -180,19 +203,30 @@ for tag in tags.data:
 
 ## Обработка ошибок
 
+Исключения одинаковы для синхронного и асинхронного клиента.
+
 ```python
-from wbsdk import WBClient
+from wbsdk import WBClient, AsyncWBClient
 from wbsdk.exceptions import WBAuthError, WBRateLimitError, WBValidationError
 
+# Синхронный клиент
 try:
-    client = WBClient(token="...")
-    result = client.content.get_parent_categories()
+    with WBClient(token="...") as client:
+        result = client.content.get_parent_categories()
 except WBAuthError:
     print("Ошибка авторизации (401/403)")
 except WBRateLimitError:
     print("Превышен лимит запросов (429)")
 except WBValidationError:
     print("Ошибка валидации запроса (400/422)")
+
+# Асинхронный клиент
+async def fetch():
+    try:
+        async with AsyncWBClient(token="...") as client:
+            return await client.content.get_parent_categories()
+    except WBAuthError:
+        print("Ошибка авторизации (401/403)")
 ```
 
 ---
