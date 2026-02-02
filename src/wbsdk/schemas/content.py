@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class ParentCategory(BaseModel):
@@ -76,6 +76,33 @@ class DirectoryItem(BaseModel):
     name: str | None = None
     hex_code: str | None = Field(default=None, alias="hexCode")
     parent_id: int | None = Field(default=None, alias="parentID")
+
+
+class DirectoryListResponse(BaseModel):
+    """Ответ со списком элементов справочника. API возвращает {\"data\": [...]}, иногда data — массив строк (kinds)."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    data: list[DirectoryItem] = Field(default_factory=list)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_api_response(cls, value: Any) -> Any:
+        if value is None:
+            return {"data": []}
+        if isinstance(value, list):
+            value = {"data": value}
+        if isinstance(value, dict) and "data" in value:
+            data = value["data"]
+            if isinstance(data, list):
+                value = {
+                    **value,
+                    "data": [
+                        {"name": x} if isinstance(x, str) else x
+                        for x in data
+                    ],
+                }
+        return value
 
 
 class TnvedResponse(BaseModel):

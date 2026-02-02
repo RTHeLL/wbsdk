@@ -14,6 +14,7 @@ from wbsdk.schemas import (
     CardsListResponse,
     ContentMutationResponse,
     DirectoryItem,
+    DirectoryListResponse,
     ParentCategoriesResponse,
     SubjectCharacteristicsResponse,
     SubjectsResponse,
@@ -87,9 +88,10 @@ def test_get_colors(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json=[{"id": 1, "name": "Чёрный"}])
     )
     result = client.content.get_colors()
-    assert isinstance(result, list)
-    assert all(isinstance(x, DirectoryItem) for x in result)
-    assert result[0].name == "Чёрный"
+    assert isinstance(result, DirectoryListResponse)
+    assert isinstance(result.data, list)
+    assert all(isinstance(x, DirectoryItem) for x in result.data)
+    assert result.data[0].name == "Чёрный"
 
 
 @respx.mock
@@ -99,8 +101,9 @@ def test_get_genders(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json=[{"id": 1, "name": "Мужской"}])
     )
     result = client.content.get_genders()
-    assert isinstance(result, list)
-    assert all(isinstance(x, DirectoryItem) for x in result)
+    assert isinstance(result, DirectoryListResponse)
+    assert isinstance(result.data, list)
+    assert all(isinstance(x, DirectoryItem) for x in result.data)
 
 
 @respx.mock
@@ -110,8 +113,9 @@ def test_get_countries(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json=[{"id": 1, "name": "Россия"}])
     )
     result = client.content.get_countries()
-    assert isinstance(result, list)
-    assert all(isinstance(x, DirectoryItem) for x in result)
+    assert isinstance(result, DirectoryListResponse)
+    assert isinstance(result.data, list)
+    assert all(isinstance(x, DirectoryItem) for x in result.data)
 
 
 @respx.mock
@@ -121,8 +125,9 @@ def test_get_seasons(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json=[{"id": 1, "name": "Всесезонный"}])
     )
     result = client.content.get_seasons()
-    assert isinstance(result, list)
-    assert all(isinstance(x, DirectoryItem) for x in result)
+    assert isinstance(result, DirectoryListResponse)
+    assert isinstance(result.data, list)
+    assert all(isinstance(x, DirectoryItem) for x in result.data)
 
 
 @respx.mock
@@ -132,8 +137,9 @@ def test_get_vat_rates(client: WBClient) -> None:
         return_value=respx.MockResponse(200, json=[{"id": 1, "name": "20%"}])
     )
     result = client.content.get_vat_rates()
-    assert isinstance(result, list)
-    assert all(isinstance(x, DirectoryItem) for x in result)
+    assert isinstance(result, DirectoryListResponse)
+    assert isinstance(result.data, list)
+    assert all(isinstance(x, DirectoryItem) for x in result.data)
 
 
 @respx.mock

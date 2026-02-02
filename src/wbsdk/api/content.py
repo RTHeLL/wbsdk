@@ -10,7 +10,7 @@ from wbsdk.schemas.content import (
     CardsLimitsResponse,
     CardsListResponse,
     ContentMutationResponse,
-    DirectoryItem,
+    DirectoryListResponse,
     ParentCategoriesResponse,
     SubjectCharacteristicsResponse,
     SubjectsResponse,
@@ -75,59 +75,59 @@ class ContentAPI(BaseAPI):
             response_model=SubjectCharacteristicsResponse,
         )
 
-    def get_colors(self, *, locale: str | None = None) -> list[DirectoryItem]:
-        """Справочник цветов."""
+    def get_colors(self, *, locale: str | None = None) -> DirectoryListResponse:
+        """Справочник цветов. Для списка элементов используйте .data."""
         params = {}
         if locale:
             params["locale"] = locale
         return self.get(
             "/content/v2/directory/colors",
             params=params or None,
-            response_model=list[DirectoryItem],
+            response_model=DirectoryListResponse,
         )
 
-    def get_genders(self, *, locale: str | None = None) -> list[DirectoryItem]:
-        """Справочник пола."""
+    def get_genders(self, *, locale: str | None = None) -> DirectoryListResponse:
+        """Справочник пола. Для списка элементов используйте .data."""
         params = {}
         if locale:
             params["locale"] = locale
         return self.get(
             "/content/v2/directory/kinds",
             params=params or None,
-            response_model=list[DirectoryItem],
+            response_model=DirectoryListResponse,
         )
 
-    def get_countries(self, *, locale: str | None = None) -> list[DirectoryItem]:
-        """Справочник стран производства."""
+    def get_countries(self, *, locale: str | None = None) -> DirectoryListResponse:
+        """Справочник стран производства. Для списка элементов используйте .data."""
         params = {}
         if locale:
             params["locale"] = locale
         return self.get(
             "/content/v2/directory/countries",
             params=params or None,
-            response_model=list[DirectoryItem],
+            response_model=DirectoryListResponse,
         )
 
-    def get_seasons(self, *, locale: str | None = None) -> list[DirectoryItem]:
-        """Справочник сезонов."""
+    def get_seasons(self, *, locale: str | None = None) -> DirectoryListResponse:
+        """Справочник сезонов. Для списка элементов используйте .data."""
         params = {}
         if locale:
             params["locale"] = locale
         return self.get(
             "/content/v2/directory/seasons",
             params=params or None,
-            response_model=list[DirectoryItem],
+            response_model=DirectoryListResponse,
         )
 
-    def get_vat_rates(self, *, locale: str | None = None) -> list[DirectoryItem]:
-        """Справочник ставок НДС."""
+    def get_vat_rates(self, *, locale: str | None = None) -> DirectoryListResponse:
+        """Справочник ставок НДС. Для списка элементов используйте .data."""
         params = {}
         if locale:
             params["locale"] = locale
         return self.get(
             "/content/v2/directory/vat",
             params=params or None,
-            response_model=list[DirectoryItem],
+            response_model=DirectoryListResponse,
         )
 
     def get_tnved(

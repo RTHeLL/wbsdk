@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class PriceUploadResponse(BaseModel):
@@ -50,6 +50,20 @@ class GoodsWithPricesResponse(BaseModel):
     data: list[GoodsWithPrice] = Field(default_factory=list)
     total: int | None = None
 
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_api_response(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        data = value.get("data")
+        if isinstance(data, dict) and "listGoods" in data:
+            data = data["listGoods"]
+        if data is None:
+            data = []
+        if "listGoods" in value and "data" not in value:
+            data = value.get("listGoods") or []
+        return {"data": data, "total": value.get("total")}
+
 
 class GoodsSizeWithPrice(BaseModel):
     """Размер товара с ценой."""
@@ -87,3 +101,17 @@ class QuarantineGoodsResponse(BaseModel):
 
     data: list[QuarantineGood] = Field(default_factory=list)
     total: int | None = None
+
+    @model_validator(mode="before")
+    @classmethod
+    def _normalize_api_response(cls, value: Any) -> Any:
+        if not isinstance(value, dict):
+            return value
+        data = value.get("data")
+        if isinstance(data, dict) and "listGoods" in data:
+            data = data["listGoods"]
+        if data is None:
+            data = []
+        if "listGoods" in value and "data" not in value:
+            data = value.get("listGoods") or []
+        return {"data": data, "total": value.get("total")}
