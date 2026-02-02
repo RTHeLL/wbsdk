@@ -17,7 +17,7 @@ from wbsdk.schemas import (
     TagsResponse,
 )
 
-__version__ = "0.2.2"
+__version__ = "1.0.0"
 __all__ = [
     "AsyncWBClient",
     "WBClient",
