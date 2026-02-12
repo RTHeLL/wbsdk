@@ -5,6 +5,7 @@ import respx
 
 from wbsdk import WBClient
 from wbsdk.schemas.analytics import (
+    AnalyticsDataResponse,
     NmReportCreateResponse,
     NmReportRetryResponse,
     NmReportsListResponse,
@@ -170,3 +171,74 @@ def test_get_nm_report_file(client: WBClient) -> None:
     result = client.analytics.get_nm_report_file(download_id="rep-123")
     assert isinstance(result, bytes)
     assert result == b"csv,data,here"
+
+
+@respx.mock
+def test_get_search_report_table_groups(client: WBClient) -> None:
+    """Тест get_search_report_table_groups."""
+    respx.post(f"{BASE_URL}/api/v2/search-report/table/groups").mock(
+        return_value=respx.MockResponse(200, json={"data": [], "total": 0})
+    )
+    result = client.analytics.get_search_report_table_groups(payload={"cursor": {}})
+    assert isinstance(result, AnalyticsDataResponse)
+    assert result.total == 0
+
+
+@respx.mock
+def test_get_search_report_table_details(client: WBClient) -> None:
+    """Тест get_search_report_table_details."""
+    respx.post(f"{BASE_URL}/api/v2/search-report/table/details").mock(
+        return_value=respx.MockResponse(200, json={"data": []})
+    )
+    result = client.analytics.get_search_report_table_details(payload={})
+    assert isinstance(result, AnalyticsDataResponse)
+
+
+@respx.mock
+def test_get_search_report_product_search_texts(client: WBClient) -> None:
+    """Тест get_search_report_product_search_texts."""
+    respx.post(f"{BASE_URL}/api/v2/search-report/product/search-texts").mock(
+        return_value=respx.MockResponse(200, json={"data": []})
+    )
+    result = client.analytics.get_search_report_product_search_texts(payload={})
+    assert isinstance(result, AnalyticsDataResponse)
+
+
+@respx.mock
+def test_get_search_report_product_orders(client: WBClient) -> None:
+    """Тест get_search_report_product_orders."""
+    respx.post(f"{BASE_URL}/api/v2/search-report/product/orders").mock(
+        return_value=respx.MockResponse(200, json={"data": []})
+    )
+    result = client.analytics.get_search_report_product_orders(payload={})
+    assert isinstance(result, AnalyticsDataResponse)
+
+
+@respx.mock
+def test_get_stocks_report_offices(client: WBClient) -> None:
+    """Тест get_stocks_report_offices."""
+    respx.post(f"{BASE_URL}/api/v2/stocks-report/offices").mock(
+        return_value=respx.MockResponse(200, json={"data": []})
+    )
+    result = client.analytics.get_stocks_report_offices(payload={})
+    assert isinstance(result, AnalyticsDataResponse)
+
+
+@respx.mock
+def test_get_stocks_report_products_sizes(client: WBClient) -> None:
+    """Тест get_stocks_report_products_sizes."""
+    respx.post(f"{BASE_URL}/api/v2/stocks-report/products/sizes").mock(
+        return_value=respx.MockResponse(200, json={"data": []})
+    )
+    result = client.analytics.get_stocks_report_products_sizes(payload={})
+    assert isinstance(result, AnalyticsDataResponse)
+
+
+@respx.mock
+def test_get_excise_report(client: WBClient) -> None:
+    """Тест get_excise_report."""
+    respx.get(f"{BASE_URL}/api/v1/analytics/excise-report").mock(
+        return_value=respx.MockResponse(200, json=[])
+    )
+    result = client.analytics.get_excise_report(params={"dateFrom": "2024-01-01"})
+    assert result == []
