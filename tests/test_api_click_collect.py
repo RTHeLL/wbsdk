@@ -55,3 +55,24 @@ def test_get_orders_client(client: WBClient) -> None:
     )
     result = client.click_collect.get_orders_client(order_ids=[1])
     assert result is not None
+
+
+@respx.mock
+def test_delete_order_meta(client: WBClient) -> None:
+    """Тест delete_order_meta — удаление метаданных по ключу."""
+    route = respx.delete(
+        f"{BASE_URL}/api/v3/click-collect/orders/123/meta"
+    ).mock(return_value=respx.MockResponse(204))
+    client.click_collect.delete_order_meta(order_id=123, key="imei")
+    assert route.called
+    assert "key=imei" in str(route.calls.last.request.url)
+
+
+@respx.mock
+def test_delete_order_meta_without_key(client: WBClient) -> None:
+    """Тест delete_order_meta без key."""
+    route = respx.delete(
+        f"{BASE_URL}/api/v3/click-collect/orders/456/meta"
+    ).mock(return_value=respx.MockResponse(204))
+    client.click_collect.delete_order_meta(order_id=456)
+    assert route.called

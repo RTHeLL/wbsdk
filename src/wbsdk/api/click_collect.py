@@ -84,6 +84,16 @@ class ClickCollectAPI(BaseAPI):
         """Метаданные одного заказа самовывоза."""
         return self.get(f"/api/v3/click-collect/orders/{order_id}/meta")
 
+    def delete_order_meta(self, order_id: int, *, key: str | None = None) -> None:
+        """Удалить значение метаданных заказа по ключу (imei, uin, gtin, sgtin)."""
+        params: dict[str, Any] = {}
+        if key is not None:
+            params["key"] = key
+        self.delete(
+            f"/api/v3/click-collect/orders/{order_id}/meta",
+            params=params or None,
+        )
+
     def add_order_sgtin(self, order_id: int, sgtins: list[str]) -> None:
         """Добавить коды маркировки к заказу."""
         self.put(
