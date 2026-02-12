@@ -118,7 +118,7 @@ if [[ "$DRY_RUN" == true ]]; then
     echo "[dry-run] Будет: git add, commit «Bump version to $NEW_VERSION», tag v$NEW_VERSION, push"
   fi
   if [[ "$DO_RELEASE" == true ]]; then
-    echo "[dry-run] Будет: gh release create v$NEW_VERSION --generate-notes"
+    echo "[dry-run] Будет: gh release create v$NEW_VERSION (описание из CHANGELOG.md, при наличии секции [${NEW_VERSION}])"
   fi
   exit 0
 fi
@@ -159,6 +159,20 @@ if [[ "$DO_RELEASE" == true ]]; then
     echo "Ошибка: gh (GitHub CLI) не найден. Установите gh и выполните авторизацию." >&2
     exit 1
   fi
-  gh release create "v$NEW_VERSION" --generate-notes
-  echo "GitHub Release v$NEW_VERSION создан. Workflow публикации в PyPI должен запуститься."
+  CHANGELOG="$REPO_ROOT/CHANGELOG.md"
+  RELEASE_NOTES=""
+  if [[ -f "$CHANGELOG" ]]; then
+    # Извлекаем секцию для новой версии из CHANGELOG (заголовок ## [X.Y.Z] или ## [X.Y.Z](url))
+    RELEASE_NOTES=$(awk -v ver="$NEW_VERSION" '
+      $0 ~ "^## \\[" ver "\\]" { found=1; print; next }
+      found { if (/^## /) exit; print }
+    ' "$CHANGELOG")
+  fi
+  if [[ -n "$RELEASE_NOTES" ]]; then
+    echo "$RELEASE_NOTES" | gh release create "v$NEW_VERSION" --notes-file -
+    echo "GitHub Release v$NEW_VERSION создан (описание из CHANGELOG.md). Workflow публикации в PyPI должен запуститься."
+  else
+    gh release create "v$NEW_VERSION" --generate-notes
+    echo "GitHub Release v$NEW_VERSION создан (сгенерированные заметки). Добавьте секцию [${NEW_VERSION}] в CHANGELOG.md для следующего релиза."
+  fi
 fi

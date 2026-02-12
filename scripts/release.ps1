@@ -91,7 +91,7 @@ if ($DryRun) {
         Write-Host "[dry-run] Будет: git add, commit «Bump version to $NewVersion», tag v$NewVersion, push"
     }
     if ($Release) {
-        Write-Host "[dry-run] Будет: gh release create v$NewVersion --generate-notes"
+        Write-Host "[dry-run] Будет: gh release create v$NewVersion (описание из CHANGELOG.md, при наличии секции [$NewVersion])"
     }
     exit 0
 }
@@ -131,7 +131,22 @@ if ($Release) {
         Write-Error "Ошибка: gh (GitHub CLI) не найден. Установите gh и выполните авторизацию."
         exit 1
     }
-    gh release create "v$NewVersion" --generate-notes
-    if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    Write-Host "GitHub Release v$NewVersion создан. Workflow публикации в PyPI должен запуститься."
+    $changelogPath = Join-Path $RepoRoot "CHANGELOG.md"
+    $releaseNotes = $null
+    if (Test-Path $changelogPath) {
+        $content = Get-Content -Raw -Encoding UTF8 $changelogPath
+        $pattern = '(?ms)^## \[' + [regex]::Escape($NewVersion) + '\][^\r\n]*\r?\n(.*?)(?=^## |\z)'
+        if ($content -match $pattern) {
+            $releaseNotes = $Matches[0].Trim()
+        }
+    }
+    if ($releaseNotes) {
+        $releaseNotes | gh release create "v$NewVersion" --notes-file -
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        Write-Host "GitHub Release v$NewVersion создан (описание из CHANGELOG.md). Workflow публикации в PyPI должен запуститься."
+    } else {
+        gh release create "v$NewVersion" --generate-notes
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        Write-Host "GitHub Release v$NewVersion создан (сгенерированные заметки). Добавьте секцию [$NewVersion] в CHANGELOG.md для следующего релиза."
+    }
 }

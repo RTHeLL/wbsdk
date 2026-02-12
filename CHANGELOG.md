@@ -1,8 +1,8 @@
 # Changelog
 
-Все значимые изменения в проекте описываются в этом файле. Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/).
+Все значимые изменения в проекте описываются в этом файле. Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/). Каждая версия ведёт на [страницу релизов](https://github.com/RTHeLL/wbsdk/releases) GitHub.
 
-## [1.2.6]
+## [1.2.6](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.6)
 
 ### Добавлено
 
@@ -11,7 +11,7 @@
 
 ---
 
-## [1.2.5]
+## [1.2.5](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.5)
 
 ### Добавлено
 
@@ -26,7 +26,7 @@
 
 ---
 
-## [1.2.4]
+## [1.2.4](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.4)
 
 ### Добавлено
 
@@ -40,7 +40,7 @@
 
 ---
 
-## [1.2.3]
+## [1.2.3](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.3)
 
 ### Добавлено
 
@@ -51,7 +51,7 @@
 
 ---
 
-## [1.2.2]
+## [1.2.2](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.2)
 
 ### Добавлено
 
@@ -60,7 +60,7 @@
 
 ---
 
-## [1.2.1]
+## [1.2.1](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.1)
 
 ### Добавлено
 
@@ -69,13 +69,13 @@
 
 ---
 
-## [1.2.0]
+## [1.2.0](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.0)
 
 - Переход на семантическое версионирование 1.2.x (накопление изменений последующих минорных релизов)
 
 ---
 
-## [1.1.0]
+## [1.1.0](https://github.com/RTHeLL/wbsdk/releases/tag/v1.1.0)
 
 ### Добавлено
 
@@ -86,7 +86,7 @@
 
 ---
 
-## [1.0.1]
+## [1.0.1](https://github.com/RTHeLL/wbsdk/releases/tag/v1.0.1)
 
 ### Изменено
 
@@ -94,7 +94,7 @@
 
 ---
 
-## [1.0.0]
+## [1.0.0](https://github.com/RTHeLL/wbsdk/releases/tag/v1.0.0)
 
 ### Добавлено
 
@@ -111,7 +111,7 @@
 
 ---
 
-## [0.2.2]
+## [0.2.2](https://github.com/RTHeLL/wbsdk/releases/tag/v0.2.2)
 
 ### Изменено
 
@@ -119,7 +119,7 @@
 
 ---
 
-## [0.2.1]
+## [0.2.1](https://github.com/RTHeLL/wbsdk/releases/tag/v0.2.1)
 
 ### Добавлено
 
@@ -131,7 +131,7 @@
 
 ---
 
-## [0.2.0]
+## [0.2.0](https://github.com/RTHeLL/wbsdk/releases/tag/v0.2.0)
 
 ### Добавлено
 
@@ -143,7 +143,7 @@
 
 ---
 
-## [0.1.4]
+## [0.1.4](https://github.com/RTHeLL/wbsdk/releases/tag/v0.1.4)
 
 ### Добавлено
 
@@ -159,7 +159,7 @@
 
 ---
 
-## [0.1.3]
+## [0.1.3](https://github.com/RTHeLL/wbsdk/releases/tag/v0.1.3)
 
 ### Изменено
 
@@ -168,7 +168,7 @@
 
 ---
 
-## [0.1.2]
+## [0.1.2](https://github.com/RTHeLL/wbsdk/releases/tag/v0.1.2)
 
 ### Исправлено
 
@@ -180,7 +180,7 @@
 
 ---
 
-## [0.1.1]
+## [0.1.1](https://github.com/RTHeLL/wbsdk/releases/tag/v0.1.1)
 
 ### Добавлено
 
@@ -192,7 +192,7 @@
 
 ---
 
-## Ранние версии (начальный релиз)
+## [Ранние версии](https://github.com/RTHeLL/wbsdk/releases) (начальный релиз)
 
 ### Добавлено
 
