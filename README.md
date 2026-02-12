@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/RTHeLL/wbsdk/actions/workflows/publish.yml/badge.svg)](https://github.com/RTHeLL/wbsdk/actions)
 
-Python SDK для работы с [API Wildberries](https://dev.wildberries.ru/). Поддержка товаров, заказов, цен, складов и аналитики.
+Python SDK для работы с [API Wildberries](https://dev.wildberries.ru/). Поддержка товаров, заказов, цен, складов, аналитики, рекламы, финансов и других разделов портала продавца.
 
 ---
 
@@ -13,11 +13,24 @@ Python SDK для работы с [API Wildberries](https://dev.wildberries.ru/)
 
 | Модуль | Описание |
 |--------|----------|
+| **General** | Проверка подключения (ping), новости портала, информация о продавце |
 | **Content** | Карточки товаров, категории, справочники, теги, медиафайлы |
 | **Prices** | Цены, скидки, карантин, скидки WB Клуба, цены по размерам |
-| **Marketplace (FBS)** | Заказы, поставки, стикеры, пропуска, метаданные заказов |
+| **Marketplace (FBS)** | Заказы FBS, поставки, стикеры, пропуска, метаданные, история статусов |
+| **Orders DBW** | Сборочные задания доставки курьером WB |
+| **Orders DBS** | Сборочные задания витрины (DBS) |
+| **Click Collect** | Заказы самовывоза |
+| **Orders FBW** | Поставки на склад WB (приёмка, склады, транзитные тарифы) |
 | **Warehouses** | Склады продавца (DBW), остатки, офисы, контакты |
-| **Analytics** | Воронка продаж, поисковые запросы, отчёты по остаткам, CSV-отчёты |
+| **Analytics** | Воронка продаж, поисковые запросы, остатки, отчёты (акцизы, приёмка, хранение, возвраты и др.), CSV-отчёты |
+| **User Management** | Приглашения пользователей и управление доступом |
+| **Tariffs** | Комиссии, тарифы на короба, паллеты, возврат, приёмку |
+| **Communications** | Вопросы, отзывы, пины, чаты, претензии |
+| **Reports** | Отчёты поставок, остатков, заказов, продаж (statistics-api) |
+| **Promotion** | Реклама: кампании, ставки, бюджет, статистика; календарь акций |
+| **Finances** | Баланс продавца |
+| **Documents** | Категории и список документов, скачивание |
+| **WBD** | Цифровые товары: ключи API, офферы, каталог |
 
 **Встроенные механизмы:**
 
@@ -49,12 +62,16 @@ pip install -e .
 
 ## Быстрый старт
 
-Доступны **синхронный** (`WBClient`) и **асинхронный** (`AsyncWBClient`) клиенты
+Доступны **синхронный** (`WBClient`) и **асинхронный** (`AsyncWBClient`) клиенты. Все разделы API доступны через свойства клиента: `content`, `prices`, `marketplace`, `general`, `orders_dbw`, `orders_dbs`, `click_collect`, `orders_fbw`, `warehouses`, `analytics`, `promotion`, `promotion_calendar`, `communications`, `reports`, `finances`, `documents`, `tariffs`, `user_management`, `wbd`.
 
 ```python
 from wbsdk import WBClient
 
 client = WBClient(token="YOUR_API_TOKEN")
+
+# Проверка подключения и новости
+client.general.ping()  # PingResponse
+# client.general.get_news(from_date="2024-01-01")
 
 # Категории и карточки (возвращаются Pydantic-объекты)
 categories = client.content.get_parent_categories()  # ParentCategoriesResponse
@@ -168,17 +185,28 @@ for tag in tags.data:
 | `get_quarantine_goods()` | Товары в карантине цен |
 | `get_processed_upload_state()` | Статус выгрузки цен |
 
+### General — общий раздел
+
+| Метод | Описание |
+|-------|----------|
+| `ping()` | Проверка подключения и валидности токена |
+| `get_news()` | Новости портала продавцов |
+| `get_seller_info()` | Информация о продавце |
+
 ### Marketplace — заказы FBS
 
 | Метод | Описание |
 |-------|----------|
 | `get_new_orders()` | Новые сборочные задания |
 | `get_orders()` | Заказы за период |
+| `get_orders_status()` | Статусы сборочных заданий |
+| `get_orders_status_history()` | История статусов (кроссбордер) |
+| `get_orders_reshipment()` | Заказы, требующие переотправки |
 | `cancel_order()` | Отмена заказа |
-| `get_orders_stickers()` | Стикеры для заказов |
-| `create_supply()` | Создание поставки |
-| `add_orders_to_supply()` | Добавление заказов в поставку |
-| `get_passes_offices()`, `create_pass()` | Пропуска на склад |
+| `get_orders_stickers()`, `get_cross_border_stickers()` | Стикеры для заказов |
+| `get_orders_metadata()`, `add_order_sgtin()`, `add_order_uin()` и др. | Метаданные заказов |
+| `create_supply()`, `add_orders_to_supply()`, `deliver_supply()` | Поставки |
+| `get_passes_offices()`, `get_passes()`, `create_pass()`, `update_pass()`, `delete_pass()` | Пропуска на склад |
 
 ### Warehouses — склады
 
@@ -196,8 +224,69 @@ for tag in tags.data:
 | `get_sales_funnel_products()` | Воронка по карточкам |
 | `get_sales_funnel_products_history()` | История по дням |
 | `get_search_report()` | Отчёт по поисковым запросам |
+| `get_search_report_table_groups()`, `get_search_report_table_details()` | Пагинация по поисковым отчётам |
+| `get_search_report_product_search_texts()`, `get_search_report_product_orders()` | Поисковые запросы по товару |
 | `get_stocks_groups()`, `get_stocks_products()` | Отчёты по остаткам |
+| `get_stocks_report_offices()`, `get_stocks_report_products_sizes()` | Остатки по складам и размерам |
 | `create_nm_report()`, `get_nm_report_file()` | CSV-отчёты |
+| `get_excise_report()` | Отчёт по акцизам |
+| `create_warehouse_remains_task()`, `get_warehouse_remains_task_download()` | Остатки на складе |
+| `create_acceptance_report()`, `get_acceptance_report_task_download()` | Отчёт приёмки |
+| `get_paid_storage()`, `get_paid_storage_task_download()` | Платное хранение |
+| `get_region_sale()`, `get_brand_share()`, `get_banned_products_*()`, `get_goods_return()` | Продажи по регионам, доля бренда, заблокированные товары, возвраты |
+| `get_measurement_penalties()`, `get_warehouse_measurements()`, `get_deductions()`, `get_antifraud_details()`, `get_goods_labeling()` | Штрафы, замеры, удержания, антифрод, маркировка |
+
+### User Management — управление пользователями
+
+| Метод | Описание |
+|-------|----------|
+| `create_invite()` | Создать приглашение |
+| `get_users()` | Список пользователей |
+| `update_users_access()` | Обновить доступ пользователей |
+
+### Tariffs — тарифы
+
+| Метод | Описание |
+|-------|----------|
+| `get_commission()` | Комиссия по категориям |
+| `get_tariffs_box()`, `get_tariffs_pallet()`, `get_tariffs_return()` | Тарифы на короба, паллеты, возврат |
+| `get_acceptance_coefficients()` | Коэффициенты приёмки по складам |
+
+### Orders DBW — заказы доставки курьером WB
+
+Доступ через `client.orders_dbw`. Новые и завершённые сборочные задания, статусы, даты доставки, отмена, метаданные (IMEI, УИН, GTIN, срок годности, ГТД и др.).
+
+### Orders DBS — заказы витрины
+
+Доступ через `client.orders_dbs`. Новые и завершённые заказы DBS, группы, клиенты, даты доставки, статусы, отмена, подтверждение, доставка, получение, метаданные.
+
+### Click Collect — самовывоз
+
+Доступ через `client.click_collect`. Новые заказы, подтверждение, готовность к выдаче, получение/отказ, проверка покупателя по коду.
+
+### Orders FBW — поставки на склад WB
+
+Доступ через `client.orders_fbw`. Коэффициенты приёмки, опции приёмки, склады WB, транзитные тарифы, список поставок FBW.
+
+### Communications — вопросы, отзывы, чаты
+
+Доступ через `client.communications`. Вопросы (количество, список, ответ), отзывы (количество, список, ответ, возврат), архив отзывов, пины, чаты, претензии.
+
+### Reports — отчёты поставок и продаж
+
+Доступ через `client.reports`. Поставки (`get_incomes`), остатки (`get_stocks`), заказы (`get_orders`), продажи (`get_sales`), отчёт по реализации (`get_report_detail_by_period`).
+
+### Promotion — реклама и календарь акций
+
+Доступ через `client.promotion` и `client.promotion_calendar`. Кампании (создание, запуск, пауза, ставки, бюджет, статистика), баланс рекламного счёта, нормзапросы, аукцион. Календарь: список акций, детали, номенклатуры, загрузка акций.
+
+### Finances и Documents
+
+Доступ через `client.finances` и `client.documents`. Баланс продавца (`get_balance`). Категории документов, список документов, скачивание одного или нескольких документов.
+
+### WBD — цифровые товары
+
+Доступ через `client.wbd`. Ключи API (список, погашенные), офферы (список, детали, ключи, цена, каталог), превью офферов.
 
 ---
 
@@ -235,9 +324,12 @@ async def fetch():
 
 - [API Wildberries](https://dev.wildberries.ru/)
 - [Песочница](https://dev.wildberries.ru/sandbox)
+- [Общий раздел](https://dev.wildberries.ru/openapi/general) — ping, новости, информация о продавце
 - [Работа с товарами](https://dev.wildberries.ru/openapi/work-with-products)
 - [Заказы FBS](https://dev.wildberries.ru/openapi/orders-fbs)
+- [Заказы DBW](https://dev.wildberries.ru/openapi/orders-dbw), [Заказы DBS](https://dev.wildberries.ru/openapi/orders-dbs), [Самовывоз](https://dev.wildberries.ru/openapi/in-store-pickup), [Поставки FBW](https://dev.wildberries.ru/openapi/orders-fbw)
 - [Аналитика](https://dev.wildberries.ru/openapi/analytics)
+- [Реклама](https://dev.wildberries.ru/openapi/promotion), [Вопросы и отзывы](https://dev.wildberries.ru/openapi/communications), [Отчёты](https://dev.wildberries.ru/openapi/reports), [Финансы](https://dev.wildberries.ru/openapi/finances), [WBD](https://dev.wildberries.ru/openapi/wbd)
 
 ---
 
