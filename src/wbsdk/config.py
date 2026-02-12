@@ -26,9 +26,12 @@ SANDBOX_BASE_URLS = {
     "content": "https://content-api-sandbox.wildberries.ru",
     "marketplace": "https://marketplace-api-sandbox.wildberries.ru",
     "prices": "https://discounts-prices-api-sandbox.wildberries.ru",
+    "dp_calendar": "https://discounts-prices-api-sandbox.wildberries.ru",
     "analytics": "https://statistics-api-sandbox.wildberries.ru",
     "advert": "https://advert-api-sandbox.wildberries.ru",
     "feedbacks": "https://feedbacks-api-sandbox.wildberries.ru",
+    "supplies": "https://supplies-api-sandbox.wildberries.ru",
+    "statistics": "https://statistics-api-sandbox.wildberries.ru",
 }
 
 # Rate limits по доменам: (requests_per_period, period_seconds, min_interval_ms)

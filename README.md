@@ -104,11 +104,15 @@ funnel = client.analytics.get_sales_funnel_products(
 
 ```python
 client = WBClient(token="YOUR_SANDBOX_TOKEN", sandbox=True)
-# Дальше вызовы идут на sandbox-хосты (content-api-sandbox, marketplace-api-sandbox и т.д.)
+# Вызовы идут на sandbox-хосты по разделам из таблицы на dev.wildberries.ru/sandbox:
+# content, prices, dp_calendar → content-api-sandbox / discounts-prices-api-sandbox
+# marketplace, orders_dbw, orders_dbs, click_collect, warehouses → marketplace-api-sandbox
+# orders_fbw → supplies-api-sandbox; promotion, promotion_calendar → advert-api-sandbox
+# communications → feedbacks-api-sandbox; reports → statistics-api-sandbox
 categories = client.content.get_parent_categories()
 ```
 
-В песочнице действуют свои лимиты (например, 1 запрос в секунду для многих разделов).
+В песочнице действуют свои лимиты (например, 1 запрос в секунду для многих разделов). Соответствие разделов и URL см. в [таблице на странице песочницы](https://dev.wildberries.ru/sandbox).
 
 ### Асинхронный клиент
 
