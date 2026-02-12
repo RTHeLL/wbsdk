@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "wbsdk"
-version = "1.1.0"
+version = "1.2.0"
 description = "Python SDK для Wildberries API"
 readme = "README.md"
 license = "MIT"
