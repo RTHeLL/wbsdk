@@ -1,5 +1,6 @@
 """API тарифов: комиссии, короба, паллеты, приёмка, возврат (common-api)."""
 
+import inspect
 from typing import Any
 
 from wbsdk.api.base import BaseAPI
@@ -52,7 +53,7 @@ class TariffsAPI(BaseAPI):
         self,
         *,
         warehouse_ids: str | None = None,
-    ) -> list[dict[str, Any]]:
+    ) -> list[dict[str, Any]] | Any:
         """Тарифы на поставку по складам на ближайшие 14 дней."""
         params: dict[str, Any] = {}
         if warehouse_ids is not None:
@@ -61,4 +62,10 @@ class TariffsAPI(BaseAPI):
             "/api/tariffs/v1/acceptance/coefficients",
             params=params or None,
         )
+        if inspect.iscoroutine(result):
+            async def _await_and_normalize() -> list[dict[str, Any]]:
+                raw = await result
+                return raw if isinstance(raw, list) else []
+
+            return _await_and_normalize()
         return result if isinstance(result, list) else []
