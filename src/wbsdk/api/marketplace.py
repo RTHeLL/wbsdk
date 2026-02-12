@@ -10,6 +10,7 @@ from wbsdk.schemas.marketplace import (
     OrdersClientInfoResponse,
     OrdersNewResponse,
     OrdersResponse,
+    OrdersStatusHistoryResponse,
     OrdersStatusResponse,
     Pass,
     PassCreateResponse,
@@ -60,6 +61,16 @@ class MarketplaceAPI(BaseAPI):
             "/api/v3/orders/status",
             json={"orders": order_ids},
             response_model=OrdersStatusResponse,
+        )
+
+    def get_orders_status_history(
+        self, order_ids: list[int]
+    ) -> OrdersStatusHistoryResponse:
+        """История статусов сборочных заданий кроссбордера (до 100 заказов)."""
+        return self.post(
+            "/api/v3/orders/status/history",
+            json={"orders": order_ids},
+            response_model=OrdersStatusHistoryResponse,
         )
 
     def get_orders_reshipment(self) -> ReshipmentResponse:
