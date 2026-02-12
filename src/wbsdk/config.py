@@ -12,6 +12,13 @@ BASE_URLS = {
     "feedbacks": "https://feedbacks-api.wildberries.ru",
     "buyer_chat": "https://buyer-chat-api.wildberries.ru",
     "returns": "https://returns-api.wildberries.ru",
+    "common": "https://common-api.wildberries.ru",
+    "user_management": "https://user-management-api.wildberries.ru",
+    "supplies": "https://supplies-api.wildberries.ru",
+    "statistics": "https://statistics-api.wildberries.ru",
+    "finance": "https://finance-api.wildberries.ru",
+    "documents": "https://documents-api.wildberries.ru",
+    "wbd": "https://devapi-digital.wildberries.ru",
 }
 
 # Базовые URL песочницы WB API (https://dev.wildberries.ru/sandbox)
@@ -36,6 +43,13 @@ RATE_LIMITS = {
     "feedbacks": (3, 1, 333),
     "buyer_chat": (10, 10, 1000),
     "returns": (20, 60, 3000),
+    "common": (60, 60, 1000),
+    "user_management": (5, 1, 200),
+    "supplies": (300, 60, 200),
+    "statistics": (300, 60, 200),
+    "finance": (1, 60, 60000),
+    "documents": (5, 10, 2000),
+    "wbd": (60, 60, 1000),
 }
 
 DEFAULT_TIMEOUT = 30.0

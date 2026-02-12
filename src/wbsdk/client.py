@@ -20,10 +20,22 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from wbsdk.api.analytics import AnalyticsAPI
+    from wbsdk.api.click_collect import ClickCollectAPI
+    from wbsdk.api.communications import CommunicationsAPI
     from wbsdk.api.content import ContentAPI
+    from wbsdk.api.general import GeneralAPI
     from wbsdk.api.marketplace import MarketplaceAPI
+    from wbsdk.api.orders_dbw import OrdersDBWAPI
+    from wbsdk.api.orders_dbs import OrdersDBSAPI
+    from wbsdk.api.orders_fbw import OrdersFBWAPI
     from wbsdk.api.prices import PricesAPI
+    from wbsdk.api.promotion import PromotionAPI, PromotionCalendarAPI
+    from wbsdk.api.reports import ReportsAPI
+    from wbsdk.api.tariffs import TariffsAPI
+    from wbsdk.api.finances import DocumentsAPI, FinancesAPI
+    from wbsdk.api.user_management import UserManagementAPI
     from wbsdk.api.warehouses import WarehousesAPI
+    from wbsdk.api.wbd import WBDAPI
 
 
 class WBClient:
@@ -68,6 +80,20 @@ class WBClient:
         self._marketplace: "MarketplaceAPI | None" = None
         self._warehouses: "WarehousesAPI | None" = None
         self._analytics: "AnalyticsAPI | None" = None
+        self._general: "GeneralAPI | None" = None
+        self._user_management: "UserManagementAPI | None" = None
+        self._tariffs: "TariffsAPI | None" = None
+        self._orders_dbw: "OrdersDBWAPI | None" = None
+        self._orders_dbs: "OrdersDBSAPI | None" = None
+        self._click_collect: "ClickCollectAPI | None" = None
+        self._orders_fbw: "OrdersFBWAPI | None" = None
+        self._communications: "CommunicationsAPI | None" = None
+        self._reports: "ReportsAPI | None" = None
+        self._promotion: "PromotionAPI | None" = None
+        self._promotion_calendar: "PromotionCalendarAPI | None" = None
+        self._finances: "FinancesAPI | None" = None
+        self._documents: "DocumentsAPI | None" = None
+        self._wbd: "WBDAPI | None" = None
 
     def _wait_rate_limit(self, domain: str) -> None:
         """Ожидает соблюдения rate limit для домена."""
@@ -223,3 +249,129 @@ class WBClient:
             base_url = self._base_urls.get("analytics", BASE_URLS["analytics"])
             self._analytics = AnalyticsAPI(self, base_url)
         return self._analytics
+
+    @property
+    def general(self) -> "GeneralAPI":
+        """API общего раздела: ping, новости, информация о продавце."""
+        if self._general is None:
+            from wbsdk.api.general import GeneralAPI
+            base_url = self._base_urls.get("common", BASE_URLS["common"])
+            self._general = GeneralAPI(self, base_url)
+        return self._general
+
+    @property
+    def user_management(self) -> "UserManagementAPI":
+        """API управления пользователями продавца."""
+        if self._user_management is None:
+            from wbsdk.api.user_management import UserManagementAPI
+            base_url = self._base_urls.get("user_management", BASE_URLS["user_management"])
+            self._user_management = UserManagementAPI(self, base_url)
+        return self._user_management
+
+    @property
+    def tariffs(self) -> "TariffsAPI":
+        """API тарифов и комиссий."""
+        if self._tariffs is None:
+            from wbsdk.api.tariffs import TariffsAPI
+            base_url = self._base_urls.get("common", BASE_URLS["common"])
+            self._tariffs = TariffsAPI(self, base_url)
+        return self._tariffs
+
+    @property
+    def orders_dbw(self) -> "OrdersDBWAPI":
+        """API заказов DBW (доставка курьером WB)."""
+        if self._orders_dbw is None:
+            from wbsdk.api.orders_dbw import OrdersDBWAPI
+            base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
+            self._orders_dbw = OrdersDBWAPI(self, base_url)
+        return self._orders_dbw
+
+    @property
+    def orders_dbs(self) -> "OrdersDBSAPI":
+        """API заказов DBS (витрина)."""
+        if self._orders_dbs is None:
+            from wbsdk.api.orders_dbs import OrdersDBSAPI
+            base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
+            self._orders_dbs = OrdersDBSAPI(self, base_url)
+        return self._orders_dbs
+
+    @property
+    def click_collect(self) -> "ClickCollectAPI":
+        """API заказов самовывоза (Click&Collect)."""
+        if self._click_collect is None:
+            from wbsdk.api.click_collect import ClickCollectAPI
+            base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
+            self._click_collect = ClickCollectAPI(self, base_url)
+        return self._click_collect
+
+    @property
+    def orders_fbw(self) -> "OrdersFBWAPI":
+        """API поставок FBW (склад WB)."""
+        if self._orders_fbw is None:
+            from wbsdk.api.orders_fbw import OrdersFBWAPI
+            base_url = self._base_urls.get("supplies", BASE_URLS["supplies"])
+            self._orders_fbw = OrdersFBWAPI(self, base_url)
+        return self._orders_fbw
+
+    @property
+    def communications(self) -> "CommunicationsAPI":
+        """API вопросов, отзывов, чатов и претензий."""
+        if self._communications is None:
+            from wbsdk.api.communications import CommunicationsAPI
+            base_url = self._base_urls.get("feedbacks", BASE_URLS["feedbacks"])
+            self._communications = CommunicationsAPI(self, base_url)
+        return self._communications
+
+    @property
+    def reports(self) -> "ReportsAPI":
+        """API отчётов: поставки, остатки, заказы, продажи."""
+        if self._reports is None:
+            from wbsdk.api.reports import ReportsAPI
+            base_url = self._base_urls.get("statistics", BASE_URLS["statistics"])
+            self._reports = ReportsAPI(self, base_url)
+        return self._reports
+
+    @property
+    def promotion(self) -> "PromotionAPI":
+        """API рекламных кампаний."""
+        if self._promotion is None:
+            from wbsdk.api.promotion import PromotionAPI
+            base_url = self._base_urls.get("advert", BASE_URLS["advert"])
+            self._promotion = PromotionAPI(self, base_url)
+        return self._promotion
+
+    @property
+    def promotion_calendar(self) -> "PromotionCalendarAPI":
+        """API календаря акций."""
+        if self._promotion_calendar is None:
+            from wbsdk.api.promotion import PromotionCalendarAPI
+            base_url = self._base_urls.get("dp_calendar", BASE_URLS["dp_calendar"])
+            self._promotion_calendar = PromotionCalendarAPI(self, base_url)
+        return self._promotion_calendar
+
+    @property
+    def finances(self) -> "FinancesAPI":
+        """API баланса продавца."""
+        if self._finances is None:
+            from wbsdk.api.finances import FinancesAPI
+            base_url = self._base_urls.get("finance", BASE_URLS["finance"])
+            self._finances = FinancesAPI(self, base_url)
+        return self._finances
+
+    @property
+    def documents(self) -> "DocumentsAPI":
+        """API документов продавца."""
+        if self._documents is None:
+            from wbsdk.api.finances import DocumentsAPI
+            base_url = self._base_urls.get("documents", BASE_URLS["documents"])
+            self._documents = DocumentsAPI(self, base_url)
+        return self._documents
+
+    @property
+    def wbd(self) -> "WBDAPI":
+        """API цифровых товаров WBD."""
+        if self._wbd is None:
+            from wbsdk.api.wbd import WBDAPI
+            base_url = self._base_urls.get("wbd", BASE_URLS["wbd"])
+            self._wbd = WBDAPI(self, base_url)
+        return self._wbd

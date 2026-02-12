@@ -67,6 +67,96 @@ async def test_async_client_analytics_api(token: str) -> None:
         assert analytics is not None
 
 
+async def test_async_client_general_api(token: str) -> None:
+    """Доступ к GeneralAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.general is not None
+        assert client.general._base_url == "https://common-api.wildberries.ru"
+
+
+async def test_async_client_user_management_api(token: str) -> None:
+    """Доступ к UserManagementAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.user_management is not None
+
+
+async def test_async_client_tariffs_api(token: str) -> None:
+    """Доступ к TariffsAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.tariffs is not None
+
+
+async def test_async_client_orders_dbw_api(token: str) -> None:
+    """Доступ к OrdersDBWAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.orders_dbw is not None
+
+
+async def test_async_client_orders_dbs_api(token: str) -> None:
+    """Доступ к OrdersDBSAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.orders_dbs is not None
+
+
+async def test_async_client_click_collect_api(token: str) -> None:
+    """Доступ к ClickCollectAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.click_collect is not None
+
+
+async def test_async_client_orders_fbw_api(token: str) -> None:
+    """Доступ к OrdersFBWAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.orders_fbw is not None
+        assert client.orders_fbw._base_url == "https://supplies-api.wildberries.ru"
+
+
+async def test_async_client_communications_api(token: str) -> None:
+    """Доступ к CommunicationsAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.communications is not None
+
+
+async def test_async_client_reports_api(token: str) -> None:
+    """Доступ к ReportsAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.reports is not None
+
+
+async def test_async_client_promotion_api(token: str) -> None:
+    """Доступ к PromotionAPI и PromotionCalendarAPI через свойства."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.promotion is not None
+        assert client.promotion_calendar is not None
+
+
+async def test_async_client_finances_documents_api(token: str) -> None:
+    """Доступ к FinancesAPI и DocumentsAPI через свойства."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.finances is not None
+        assert client.documents is not None
+
+
+async def test_async_client_wbd_api(token: str) -> None:
+    """Доступ к WBDAPI через свойство."""
+    async with AsyncWBClient(token=token) as client:
+        assert client.wbd is not None
+
+
+@respx.mock
+async def test_async_general_ping(token: str) -> None:
+    """GeneralAPI.ping возвращает данные при await."""
+    respx.get("https://common-api.wildberries.ru/ping").mock(
+        return_value=respx.MockResponse(
+            200,
+            json={"TS": "2024-01-01T12:00:00+03:00", "Status": "OK"},
+        )
+    )
+    async with AsyncWBClient(token=token) as client:
+        result = await client.general.ping()
+    assert result.status == "OK"
+
+
 async def test_async_client_content_api_sandbox(token: str) -> None:
     """При sandbox=True ContentAPI использует sandbox URL."""
     async with AsyncWBClient(token=token, sandbox=True) as client:

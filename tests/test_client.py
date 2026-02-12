@@ -64,6 +64,46 @@ def test_client_analytics_api(token: str) -> None:
         assert analytics is not None
 
 
+def test_client_general_api(token: str) -> None:
+    """Доступ к GeneralAPI через свойство."""
+    with WBClient(token=token) as client:
+        assert client.general is not None
+        assert client.general._base_url == "https://common-api.wildberries.ru"
+
+
+def test_client_user_management_tariffs_api(token: str) -> None:
+    """Доступ к UserManagementAPI и TariffsAPI через свойства."""
+    with WBClient(token=token) as client:
+        assert client.user_management is not None
+        assert client.tariffs is not None
+
+
+def test_client_orders_apis(token: str) -> None:
+    """Доступ к OrdersDBWAPI, OrdersDBSAPI, ClickCollectAPI, OrdersFBWAPI."""
+    with WBClient(token=token) as client:
+        assert client.orders_dbw is not None
+        assert client.orders_dbs is not None
+        assert client.click_collect is not None
+        assert client.orders_fbw is not None
+
+
+def test_client_communications_reports_api(token: str) -> None:
+    """Доступ к CommunicationsAPI и ReportsAPI через свойства."""
+    with WBClient(token=token) as client:
+        assert client.communications is not None
+        assert client.reports is not None
+
+
+def test_client_promotion_finances_documents_wbd_api(token: str) -> None:
+    """Доступ к PromotionAPI, FinancesAPI, DocumentsAPI, WBDAPI через свойства."""
+    with WBClient(token=token) as client:
+        assert client.promotion is not None
+        assert client.promotion_calendar is not None
+        assert client.finances is not None
+        assert client.documents is not None
+        assert client.wbd is not None
+
+
 def test_client_content_api_sandbox(token: str) -> None:
     """При sandbox=True ContentAPI использует sandbox URL."""
     with WBClient(token=token, sandbox=True) as client:
