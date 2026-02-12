@@ -89,6 +89,33 @@ class OrdersStatusResponse(BaseModel):
     orders: list[OrderStatus] = Field(default_factory=list)
 
 
+class OrderStatusHistoryItem(BaseModel):
+    """Элемент истории статуса заказа."""
+
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+
+    date: str | None = None
+    code: str = ""
+
+
+class OrderStatusHistoryEntry(BaseModel):
+    """История статусов одного заказа."""
+
+    model_config = ConfigDict(extra="ignore", populate_by_name=True)
+
+    delivery_date: str | None = Field(default=None, alias="deliveryDate")
+    statuses: list[OrderStatusHistoryItem] = Field(default_factory=list)
+    order_id: int | None = Field(default=None, alias="orderID")
+
+
+class OrdersStatusHistoryResponse(BaseModel):
+    """Ответ: история статусов сборочных заданий (кроссбордер)."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    orders: list[OrderStatusHistoryEntry] = Field(default_factory=list)
+
+
 class ReshipmentOrder(BaseModel):
     """Заказ на переотправку."""
 

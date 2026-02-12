@@ -97,3 +97,13 @@ class NmReportRetryResponse(BaseModel):
 
     data: dict[str, Any] | None = None
     error: bool = False
+
+
+class AnalyticsDataResponse(BaseModel):
+    """Ответ аналитики с произвольными data/total/cursor."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    data: Any = None
+    total: int | None = None
+    cursor: dict[str, Any] | None = None

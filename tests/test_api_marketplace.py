@@ -10,6 +10,7 @@ from wbsdk.schemas import (
     OrderMetaResponse,
     OrdersClientInfoResponse,
     OrdersResponse,
+    OrdersStatusHistoryResponse,
     OrdersStatusResponse,
     Pass,
     PassCreateResponse,
@@ -65,6 +66,30 @@ def test_get_orders_status(client: WBClient) -> None:
     result = client.marketplace.get_orders_status(order_ids=[1])
     assert isinstance(result, OrdersStatusResponse)
     assert len(result.orders) == 1
+
+
+@respx.mock
+def test_get_orders_status_history(client: WBClient) -> None:
+    """Тест get_orders_status_history."""
+    respx.post(f"{BASE_URL}/api/v3/orders/status/history").mock(
+        return_value=respx.MockResponse(
+            200,
+            json={
+                "orders": [
+                    {
+                        "orderID": 123,
+                        "deliveryDate": "2024-01-15T12:00:00Z",
+                        "statuses": [{"date": "2024-01-10T10:00:00Z", "code": "confirm"}],
+                    }
+                ]
+            },
+        )
+    )
+    result = client.marketplace.get_orders_status_history(order_ids=[123])
+    assert isinstance(result, OrdersStatusHistoryResponse)
+    assert len(result.orders) == 1
+    assert result.orders[0].order_id == 123
+    assert len(result.orders[0].statuses) == 1
 
 
 @respx.mock

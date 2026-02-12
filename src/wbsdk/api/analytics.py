@@ -4,6 +4,7 @@ from typing import Any
 
 from wbsdk.api.base import BaseAPI
 from wbsdk.schemas.analytics import (
+    AnalyticsDataResponse,
     NmReportCreateResponse,
     NmReportRetryResponse,
     NmReportsListResponse,
@@ -283,3 +284,170 @@ class AnalyticsAPI(BaseAPI):
             f"{self._base_url}/api/v2/nm-report/downloads/file/{download_id}",
             domain="analytics",
         )
+
+    # --- Поисковые запросы: таблицы и товар ---
+
+    def get_search_report_table_groups(self, payload: dict[str, Any]) -> AnalyticsDataResponse:
+        """Пагинация по группам в отчёте по поисковым запросам."""
+        return self.post(
+            "/api/v2/search-report/table/groups",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    def get_search_report_table_details(
+        self, payload: dict[str, Any]
+    ) -> AnalyticsDataResponse:
+        """Пагинация по товарам в группе в отчёте по поисковым запросам."""
+        return self.post(
+            "/api/v2/search-report/table/details",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    def get_search_report_product_search_texts(
+        self, payload: dict[str, Any]
+    ) -> AnalyticsDataResponse:
+        """Топ поисковых запросов по товару."""
+        return self.post(
+            "/api/v2/search-report/product/search-texts",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    def get_search_report_product_orders(
+        self, payload: dict[str, Any]
+    ) -> AnalyticsDataResponse:
+        """Заказы и позиции по поисковым запросам товара."""
+        return self.post(
+            "/api/v2/search-report/product/orders",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    # --- История остатков: офисы и размеры ---
+
+    def get_stocks_report_offices(
+        self, payload: dict[str, Any]
+    ) -> AnalyticsDataResponse:
+        """Данные по остаткам по складам."""
+        return self.post(
+            "/api/v2/stocks-report/offices",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    def get_stocks_report_products_sizes(
+        self, payload: dict[str, Any]
+    ) -> AnalyticsDataResponse:
+        """Данные по остаткам по размерам товара."""
+        return self.post(
+            "/api/v2/stocks-report/products/sizes",
+            json=payload,
+            response_model=AnalyticsDataResponse,
+        )
+
+    # --- Отчёты (seller-analytics) ---
+
+    def get_excise_report(self, params: dict[str, Any]) -> Any:
+        """Отчёт по акцизам."""
+        return self.get("/api/v1/analytics/excise-report", params=params)
+
+    def create_warehouse_remains_task(self, payload: dict[str, Any]) -> Any:
+        """Создать задачу отчёта остатков на складе."""
+        return self.post("/api/v1/warehouse_remains", json=payload)
+
+    def get_warehouse_remains_task_status(self, task_id: int) -> Any:
+        """Статус задачи остатков на складе."""
+        return self.get(f"/api/v1/warehouse_remains/tasks/{task_id}/status")
+
+    def get_warehouse_remains_task_download(self, task_id: int) -> bytes:
+        """Скачать отчёт остатков на складе."""
+        return self._client.request_raw(
+            "GET",
+            f"{self._base_url}/api/v1/warehouse_remains/tasks/{task_id}/download",
+            domain="analytics",
+        )
+
+    def get_measurement_penalties(self, params: dict[str, Any]) -> Any:
+        """Штрафы по замерам."""
+        return self.get("/api/analytics/v1/measurement-penalties", params=params)
+
+    def get_warehouse_measurements(self, params: dict[str, Any]) -> Any:
+        """Замеры на складе."""
+        return self.get("/api/analytics/v1/warehouse-measurements", params=params)
+
+    def get_deductions(self, params: dict[str, Any]) -> Any:
+        """Удержания."""
+        return self.get("/api/analytics/v1/deductions", params=params)
+
+    def get_antifraud_details(self, params: dict[str, Any]) -> Any:
+        """Детали антифрода."""
+        return self.get("/api/v1/analytics/antifraud-details", params=params)
+
+    def get_goods_labeling(self, params: dict[str, Any]) -> Any:
+        """Маркировка товаров."""
+        return self.get("/api/v1/analytics/goods-labeling", params=params)
+
+    def create_acceptance_report(self, payload: dict[str, Any]) -> Any:
+        """Создать задачу отчёта приёмки."""
+        return self.post("/api/v1/acceptance_report", json=payload)
+
+    def get_acceptance_report_task_status(self, task_id: int) -> Any:
+        """Статус задачи отчёта приёмки."""
+        return self.get(f"/api/v1/acceptance_report/tasks/{task_id}/status")
+
+    def get_acceptance_report_task_download(self, task_id: int) -> bytes:
+        """Скачать отчёт приёмки."""
+        return self._client.request_raw(
+            "GET",
+            f"{self._base_url}/api/v1/acceptance_report/tasks/{task_id}/download",
+            domain="analytics",
+        )
+
+    def get_paid_storage(self, params: dict[str, Any]) -> Any:
+        """Платное хранение."""
+        return self.get("/api/v1/paid_storage", params=params)
+
+    def get_paid_storage_task_status(self, task_id: int) -> Any:
+        """Статус задачи платного хранения."""
+        return self.get(f"/api/v1/paid_storage/tasks/{task_id}/status")
+
+    def get_paid_storage_task_download(self, task_id: int) -> bytes:
+        """Скачать отчёт платного хранения."""
+        return self._client.request_raw(
+            "GET",
+            f"{self._base_url}/api/v1/paid_storage/tasks/{task_id}/download",
+            domain="analytics",
+        )
+
+    def get_region_sale(self, params: dict[str, Any]) -> Any:
+        """Продажи по регионам."""
+        return self.get("/api/v1/analytics/region-sale", params=params)
+
+    def get_brand_share_brands(self, params: dict[str, Any]) -> Any:
+        """Бренды для доли бренда."""
+        return self.get("/api/v1/analytics/brand-share/brands", params=params)
+
+    def get_brand_share_parent_subjects(self, params: dict[str, Any]) -> Any:
+        """Родительские предметы для доли бренда."""
+        return self.get(
+            "/api/v1/analytics/brand-share/parent-subjects",
+            params=params,
+        )
+
+    def get_brand_share(self, params: dict[str, Any]) -> Any:
+        """Доля бренда."""
+        return self.get("/api/v1/analytics/brand-share", params=params)
+
+    def get_banned_products_blocked(self, params: dict[str, Any]) -> Any:
+        """Заблокированные товары."""
+        return self.get("/api/v1/analytics/banned-products/blocked", params=params)
+
+    def get_banned_products_shadowed(self, params: dict[str, Any]) -> Any:
+        """Затенённые товары."""
+        return self.get("/api/v1/analytics/banned-products/shadowed", params=params)
+
+    def get_goods_return(self, params: dict[str, Any]) -> Any:
+        """Возвраты товаров."""
+        return self.get("/api/v1/analytics/goods-return", params=params)
