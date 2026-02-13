@@ -17,10 +17,10 @@ from wbsdk.schemas import (
     PassOffice,
     ReshipmentResponse,
     StickersResponse,
+    SuppliesResponse,
     Supply,
     SupplyBoxesResponse,
     SupplyOrderIdsResponse,
-    SuppliesResponse,
     TrbxIdsResponse,
     TrbxStickersResponse,
 )
@@ -366,7 +366,16 @@ def test_get_passes(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v3/passes").mock(
         return_value=respx.MockResponse(
             200,
-            json=[{"id": 1, "firstName": "Иван", "lastName": "Иванов", "carModel": "Lada", "carNumber": "A123BC", "officeId": 1}],
+            json=[
+                {
+                    "id": 1,
+                    "firstName": "Иван",
+                    "lastName": "Иванов",
+                    "carModel": "Lada",
+                    "carNumber": "A123BC",
+                    "officeId": 1,
+                }
+            ],
         )
     )
     result = client.marketplace.get_passes()

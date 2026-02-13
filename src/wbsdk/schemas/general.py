@@ -1,6 +1,5 @@
 """Pydantic-схемы General API (common-api)."""
 
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 

@@ -4,7 +4,12 @@
 class WBAPIError(Exception):
     """Базовое исключение для ошибок WB API."""
 
-    def __init__(self, message: str, status_code: int | None = None, response_data: dict | None = None):
+    def __init__(
+        self,
+        message: str,
+        status_code: int | None = None,
+        response_data: dict | None = None,
+    ):
         self.message = message
         self.status_code = status_code
         self.response_data = response_data or {}

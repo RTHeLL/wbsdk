@@ -9,8 +9,8 @@ from pydantic import TypeAdapter
 from wbsdk._protocols import RequestClientProtocol
 from wbsdk.exceptions import (
     WBAPIError,
-    WBConflictError,
     WBAuthError,
+    WBConflictError,
     WBNotFoundError,
     WBRateLimitError,
     WBValidationError,
@@ -98,7 +98,7 @@ class BaseAPI:
         }
         error_class = error_classes.get(response.status_code, WBAPIError)
         raise error_class(
-            message=f"API request failed",
+            message="API request failed",
             status_code=response.status_code,
             response_data=data,
         )

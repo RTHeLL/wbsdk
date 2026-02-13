@@ -4,8 +4,8 @@ import pytest
 
 from wbsdk.exceptions import (
     WBAPIError,
-    WBConflictError,
     WBAuthError,
+    WBConflictError,
     WBNotFoundError,
     WBRateLimitError,
     WBValidationError,

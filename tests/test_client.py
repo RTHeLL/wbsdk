@@ -212,7 +212,9 @@ def test_debug_logs_request_and_response(caplog: pytest.LogCaptureFixture, token
 
 
 @respx.mock
-def test_debug_false_no_debug_logs_with_info_level(caplog: pytest.LogCaptureFixture, token: str) -> None:
+def test_debug_false_no_debug_logs_with_info_level(
+    caplog: pytest.LogCaptureFixture, token: str
+) -> None:
     """При debug=False и уровне INFO отладочные сообщения wbsdk не выводятся."""
     caplog.set_level(logging.INFO, logger="wbsdk")
     respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(

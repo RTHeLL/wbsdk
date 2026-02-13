@@ -1,6 +1,5 @@
 """Pydantic-схемы User Management API."""
 
-from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 

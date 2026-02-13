@@ -2,11 +2,9 @@
 
 import logging
 import time
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import httpx
-
-logger = logging.getLogger("wbsdk")
 
 from wbsdk.config import (
     BASE_URLS,
@@ -18,27 +16,26 @@ from wbsdk.config import (
 from wbsdk.exceptions import WBAPIError, raise_for_status
 from wbsdk.rate_limiter import RateLimiter
 
-# Импорты для избежания циклических зависимостей при инициализации API
-from typing import TYPE_CHECKING
-
 if TYPE_CHECKING:
     from wbsdk.api.analytics import AnalyticsAPI
     from wbsdk.api.click_collect import ClickCollectAPI
     from wbsdk.api.communications import CommunicationsAPI
     from wbsdk.api.content import ContentAPI
+    from wbsdk.api.finances import DocumentsAPI, FinancesAPI
     from wbsdk.api.general import GeneralAPI
     from wbsdk.api.marketplace import MarketplaceAPI
-    from wbsdk.api.orders_dbw import OrdersDBWAPI
     from wbsdk.api.orders_dbs import OrdersDBSAPI
+    from wbsdk.api.orders_dbw import OrdersDBWAPI
     from wbsdk.api.orders_fbw import OrdersFBWAPI
     from wbsdk.api.prices import PricesAPI
     from wbsdk.api.promotion import PromotionAPI, PromotionCalendarAPI
     from wbsdk.api.reports import ReportsAPI
     from wbsdk.api.tariffs import TariffsAPI
-    from wbsdk.api.finances import DocumentsAPI, FinancesAPI
     from wbsdk.api.user_management import UserManagementAPI
     from wbsdk.api.warehouses import WarehousesAPI
     from wbsdk.api.wbd import WBDAPI
+
+logger = logging.getLogger("wbsdk")
 
 
 class WBClient:
@@ -83,25 +80,25 @@ class WBClient:
         )
 
         # Ленивая инициализация API (избегаем циклических импортов)
-        self._content: "ContentAPI | None" = None
-        self._prices: "PricesAPI | None" = None
-        self._marketplace: "MarketplaceAPI | None" = None
-        self._warehouses: "WarehousesAPI | None" = None
-        self._analytics: "AnalyticsAPI | None" = None
-        self._general: "GeneralAPI | None" = None
-        self._user_management: "UserManagementAPI | None" = None
-        self._tariffs: "TariffsAPI | None" = None
-        self._orders_dbw: "OrdersDBWAPI | None" = None
-        self._orders_dbs: "OrdersDBSAPI | None" = None
-        self._click_collect: "ClickCollectAPI | None" = None
-        self._orders_fbw: "OrdersFBWAPI | None" = None
-        self._communications: "CommunicationsAPI | None" = None
-        self._reports: "ReportsAPI | None" = None
-        self._promotion: "PromotionAPI | None" = None
-        self._promotion_calendar: "PromotionCalendarAPI | None" = None
-        self._finances: "FinancesAPI | None" = None
-        self._documents: "DocumentsAPI | None" = None
-        self._wbd: "WBDAPI | None" = None
+        self._content: ContentAPI | None = None
+        self._prices: PricesAPI | None = None
+        self._marketplace: MarketplaceAPI | None = None
+        self._warehouses: WarehousesAPI | None = None
+        self._analytics: AnalyticsAPI | None = None
+        self._general: GeneralAPI | None = None
+        self._user_management: UserManagementAPI | None = None
+        self._tariffs: TariffsAPI | None = None
+        self._orders_dbw: OrdersDBWAPI | None = None
+        self._orders_dbs: OrdersDBSAPI | None = None
+        self._click_collect: ClickCollectAPI | None = None
+        self._orders_fbw: OrdersFBWAPI | None = None
+        self._communications: CommunicationsAPI | None = None
+        self._reports: ReportsAPI | None = None
+        self._promotion: PromotionAPI | None = None
+        self._promotion_calendar: PromotionCalendarAPI | None = None
+        self._finances: FinancesAPI | None = None
+        self._documents: DocumentsAPI | None = None
+        self._wbd: WBDAPI | None = None
 
     def _wait_rate_limit(self, domain: str) -> None:
         """Ожидает соблюдения rate limit для домена."""

@@ -79,7 +79,10 @@ class DirectoryItem(BaseModel):
 
 
 class DirectoryListResponse(BaseModel):
-    """Ответ со списком элементов справочника. API возвращает {\"data\": [...]}, иногда data — массив строк (kinds)."""
+    """Ответ со списком элементов справочника.
+
+    API возвращает {\"data\": [...]}, иногда data — массив строк (kinds).
+    """
 
     model_config = ConfigDict(extra="ignore")
 

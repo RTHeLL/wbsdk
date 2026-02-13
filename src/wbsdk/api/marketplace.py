@@ -17,11 +17,11 @@ from wbsdk.schemas.marketplace import (
     PassOffice,
     ReshipmentResponse,
     StickersResponse,
+    SuppliesResponse,
+    Supply,
     SupplyBoxesResponse,
     SupplyCreateResponse,
     SupplyOrderIdsResponse,
-    SuppliesResponse,
-    Supply,
     TrbxIdsResponse,
     TrbxStickersResponse,
 )

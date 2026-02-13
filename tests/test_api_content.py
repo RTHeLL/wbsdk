@@ -54,7 +54,12 @@ def test_get_subjects(client: WBClient) -> None:
             200,
             json={
                 "data": [
-                    {"subjectID": 105, "subjectName": "Кроссовки", "parentID": 1, "parentName": "Обувь"}
+                    {
+                        "subjectID": 105,
+                        "subjectName": "Кроссовки",
+                        "parentID": 1,
+                        "parentName": "Обувь",
+                    }
                 ],
                 "error": False,
             },
@@ -78,7 +83,9 @@ def test_get_subject_characteristics(client: WBClient) -> None:
     result = client.content.get_subject_characteristics(subject_id=105)
     assert isinstance(result, SubjectCharacteristicsResponse)
     assert len(result.data) == 1
-    assert (result.data[0].name if hasattr(result.data[0], "name") else result.data[0]["name"]) == "Цвет"
+    first = result.data[0]
+    name = first.name if hasattr(first, "name") else first["name"]
+    assert name == "Цвет"
 
 
 @respx.mock

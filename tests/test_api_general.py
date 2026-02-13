@@ -18,7 +18,10 @@ def client() -> WBClient:
 def test_ping(client: WBClient) -> None:
     """Тест ping."""
     respx.get(f"{BASE_URL}/ping").mock(
-        return_value=respx.MockResponse(200, json={"TS": "2024-01-01T12:00:00+03:00", "Status": "OK"})
+        return_value=respx.MockResponse(
+            200,
+            json={"TS": "2024-01-01T12:00:00+03:00", "Status": "OK"},
+        )
     )
     result = client.general.ping()
     assert isinstance(result, PingResponse)
