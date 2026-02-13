@@ -1,0 +1,23 @@
+site_name: WB SDK
+site_description: Python SDK для Wildberries API
+site_url: https://github.com/RTHeLL/wbsdk
+
+theme:
+  name: readthedocs
+
+docs_dir: docs
+
+nav:
+  - Главная: index.md
+  - API Reference: api.md
+  - Идеи развития: DEVELOPMENT_IDEAS.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_source: false
+            show_root_heading: true
