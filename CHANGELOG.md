@@ -2,6 +2,14 @@
 
 Все значимые изменения в проекте описываются в этом файле. Формат основан на [Keep a Changelog](https://keepachangelog.com/ru/1.1.0/). Каждая версия ведёт на [страницу релизов](https://github.com/RTHeLL/wbsdk/releases) GitHub.
 
+## [1.2.8](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.8)
+
+### Изменено
+
+- Мелкие правки
+
+---
+
 ## [1.2.7](https://github.com/RTHeLL/wbsdk/releases/tag/v1.2.7)
 
 ### Изменено
