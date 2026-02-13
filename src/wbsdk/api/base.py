@@ -174,6 +174,4 @@ class BaseAPI:
         **kwargs: Any,
     ) -> Any:
         """DELETE-запрос."""
-        return self._request(
-            "DELETE", path, params=params, response_model=response_model, **kwargs
-        )
+        return self._request("DELETE", path, params=params, response_model=response_model, **kwargs)

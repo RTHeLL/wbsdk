@@ -301,9 +301,7 @@ def test_upload_media_file(client: WBClient) -> None:
     with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as f:
         f.write(b"fake image content")
         f.flush()
-        result = client.content.upload_media_file(
-            nm_id=123, photo_number=1, file_path=f.name
-        )
+        result = client.content.upload_media_file(nm_id=123, photo_number=1, file_path=f.name)
     Path(f.name).unlink(missing_ok=True)
     assert isinstance(result, ContentMutationResponse)
     assert result.error is False
@@ -315,9 +313,7 @@ def test_upload_media_by_links(client: WBClient) -> None:
     respx.post(f"{BASE_URL}/content/v3/media/save").mock(
         return_value=respx.MockResponse(200, json={"data": None, "error": False})
     )
-    result = client.content.upload_media_by_links(
-        nm_id=123, data=["https://example.com/image.jpg"]
-    )
+    result = client.content.upload_media_by_links(nm_id=123, data=["https://example.com/image.jpg"])
     assert isinstance(result, ContentMutationResponse)
 
 
@@ -361,9 +357,7 @@ def test_update_tag(client: WBClient) -> None:
 @respx.mock
 def test_delete_tag(client: WBClient) -> None:
     """Тест delete_tag."""
-    respx.delete(f"{BASE_URL}/content/v2/tag/1").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.delete(f"{BASE_URL}/content/v2/tag/1").mock(return_value=respx.MockResponse(204))
     client.content.delete_tag(tag_id=1)
 
 

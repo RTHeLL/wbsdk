@@ -69,17 +69,13 @@ def test_update_warehouse(client: WBClient) -> None:
     respx.put(f"{BASE_URL}/api/v3/warehouses/1").mock(
         return_value=respx.MockResponse(200, json=None)
     )
-    client.warehouses.update_warehouse(
-        warehouse_id=1, name="Обновлённый склад", office_id=1
-    )
+    client.warehouses.update_warehouse(warehouse_id=1, name="Обновлённый склад", office_id=1)
 
 
 @respx.mock
 def test_delete_warehouse(client: WBClient) -> None:
     """Тест delete_warehouse."""
-    respx.delete(f"{BASE_URL}/api/v3/warehouses/1").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.delete(f"{BASE_URL}/api/v3/warehouses/1").mock(return_value=respx.MockResponse(204))
     client.warehouses.delete_warehouse(warehouse_id=1)
 
 
@@ -113,9 +109,7 @@ def test_update_warehouse_contacts(client: WBClient) -> None:
 @respx.mock
 def test_update_stocks(client: WBClient) -> None:
     """Тест update_stocks."""
-    respx.put(f"{BASE_URL}/api/v3/stocks/1").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/stocks/1").mock(return_value=respx.MockResponse(200))
     client.warehouses.update_stocks(
         warehouse_id=1,
         stocks=[{"chrtId": 123, "sku": "ABC", "amount": 10}],
@@ -125,9 +119,7 @@ def test_update_stocks(client: WBClient) -> None:
 @respx.mock
 def test_delete_stocks(client: WBClient) -> None:
     """Тест delete_stocks."""
-    respx.delete(f"{BASE_URL}/api/v3/stocks/1").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.delete(f"{BASE_URL}/api/v3/stocks/1").mock(return_value=respx.MockResponse(200))
     client.warehouses.delete_stocks(warehouse_id=1, chrt_ids=[123, 456])
 
 

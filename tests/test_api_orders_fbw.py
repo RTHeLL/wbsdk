@@ -16,9 +16,7 @@ def client() -> WBClient:
 @respx.mock
 def test_get_warehouses(client: WBClient) -> None:
     """Тест get_warehouses."""
-    respx.get(f"{BASE_URL}/api/v1/warehouses").mock(
-        return_value=respx.MockResponse(200, json=[])
-    )
+    respx.get(f"{BASE_URL}/api/v1/warehouses").mock(return_value=respx.MockResponse(200, json=[]))
     result = client.orders_fbw.get_warehouses()
     assert result == []
 
@@ -36,9 +34,7 @@ def test_get_transit_tariffs(client: WBClient) -> None:
 @respx.mock
 def test_get_supplies(client: WBClient) -> None:
     """Тест get_supplies."""
-    respx.post(f"{BASE_URL}/api/v1/supplies").mock(
-        return_value=respx.MockResponse(200, json=[])
-    )
+    respx.post(f"{BASE_URL}/api/v1/supplies").mock(return_value=respx.MockResponse(200, json=[]))
     result = client.orders_fbw.get_supplies(payload={"dates": []})
     assert result == []
 

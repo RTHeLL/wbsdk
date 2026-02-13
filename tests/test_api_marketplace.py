@@ -106,9 +106,7 @@ def test_get_orders_reshipment(client: WBClient) -> None:
 @respx.mock
 def test_cancel_order(client: WBClient) -> None:
     """Тест cancel_order."""
-    respx.patch(f"{BASE_URL}/api/v3/orders/1/cancel").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.patch(f"{BASE_URL}/api/v3/orders/1/cancel").mock(return_value=respx.MockResponse(200))
     client.marketplace.cancel_order(order_id=1)
 
 
@@ -156,45 +154,35 @@ def test_get_orders_metadata(client: WBClient) -> None:
 @respx.mock
 def test_delete_order_metadata(client: WBClient) -> None:
     """Тест delete_order_metadata."""
-    respx.delete(f"{BASE_URL}/api/v3/orders/1/meta").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.delete(f"{BASE_URL}/api/v3/orders/1/meta").mock(return_value=respx.MockResponse(204))
     client.marketplace.delete_order_metadata(order_id=1)
 
 
 @respx.mock
 def test_add_order_sgtin(client: WBClient) -> None:
     """Тест add_order_sgtin."""
-    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/sgtin").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/sgtin").mock(return_value=respx.MockResponse(200))
     client.marketplace.add_order_sgtin(order_id=1, sgtins=["01046007880001702115"])
 
 
 @respx.mock
 def test_add_order_uin(client: WBClient) -> None:
     """Тест add_order_uin."""
-    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/uin").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/uin").mock(return_value=respx.MockResponse(200))
     client.marketplace.add_order_uin(order_id=1, uin="12345678901234")
 
 
 @respx.mock
 def test_add_order_imei(client: WBClient) -> None:
     """Тест add_order_imei."""
-    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/imei").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/imei").mock(return_value=respx.MockResponse(200))
     client.marketplace.add_order_imei(order_id=1, imei="123456789012345")
 
 
 @respx.mock
 def test_add_order_gtin(client: WBClient) -> None:
     """Тест add_order_gtin."""
-    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/gtin").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/orders/1/meta/gtin").mock(return_value=respx.MockResponse(200))
     client.marketplace.add_order_gtin(order_id=1, gtin="4601234567890")
 
 
@@ -265,9 +253,7 @@ def test_get_supply_details(client: WBClient) -> None:
 @respx.mock
 def test_delete_supply(client: WBClient) -> None:
     """Тест delete_supply."""
-    respx.delete(f"{BASE_URL}/api/v3/supplies/WB-GI-123").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.delete(f"{BASE_URL}/api/v3/supplies/WB-GI-123").mock(return_value=respx.MockResponse(204))
     client.marketplace.delete_supply(supply_id="WB-GI-123")
 
 
@@ -341,9 +327,7 @@ def test_get_supply_box_stickers(client: WBClient) -> None:
     respx.post(f"{BASE_URL}/api/v3/supplies/WB-GI-123/trbx/stickers").mock(
         return_value=respx.MockResponse(200, json={"stickers": [{"id": "1", "file": "base64"}]})
     )
-    result = client.marketplace.get_supply_box_stickers(
-        supply_id="WB-GI-123", trbx_ids=["trbx-1"]
-    )
+    result = client.marketplace.get_supply_box_stickers(supply_id="WB-GI-123", trbx_ids=["trbx-1"])
     assert isinstance(result, TrbxStickersResponse)
     assert len(result.stickers) == 1
 
@@ -404,9 +388,7 @@ def test_create_pass(client: WBClient) -> None:
 @respx.mock
 def test_update_pass(client: WBClient) -> None:
     """Тест update_pass."""
-    respx.put(f"{BASE_URL}/api/v3/passes/1").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v3/passes/1").mock(return_value=respx.MockResponse(200))
     client.marketplace.update_pass(
         pass_id=1,
         first_name="Иван",
@@ -420,7 +402,5 @@ def test_update_pass(client: WBClient) -> None:
 @respx.mock
 def test_delete_pass(client: WBClient) -> None:
     """Тест delete_pass."""
-    respx.delete(f"{BASE_URL}/api/v3/passes/1").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.delete(f"{BASE_URL}/api/v3/passes/1").mock(return_value=respx.MockResponse(204))
     client.marketplace.delete_pass(pass_id=1)

@@ -169,9 +169,7 @@ async def test_async_sandbox_request_goes_to_sandbox_url(token: str) -> None:
     """При sandbox=True запрос уходит на content-api-sandbox."""
     route = respx.get(
         "https://content-api-sandbox.wildberries.ru/content/v2/object/parent/all"
-    ).mock(
-        return_value=respx.MockResponse(200, json={"data": [], "error": False})
-    )
+    ).mock(return_value=respx.MockResponse(200, json={"data": [], "error": False}))
     async with AsyncWBClient(token=token, sandbox=True) as client:
         await client.content.get_parent_categories()
     assert route.called
@@ -180,9 +178,7 @@ async def test_async_sandbox_request_goes_to_sandbox_url(token: str) -> None:
 @respx.mock
 async def test_async_request_adds_authorization(token: str) -> None:
     """Запрос добавляет заголовок Authorization."""
-    route = respx.get(
-        "https://content-api.wildberries.ru/content/v2/object/parent/all"
-    ).mock(
+    route = respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
         return_value=respx.MockResponse(200, json={"data": [], "error": False})
     )
     async with AsyncWBClient(token=token) as client:
@@ -194,9 +190,7 @@ async def test_async_request_adds_authorization(token: str) -> None:
 @respx.mock
 async def test_async_request_raises_on_401(token: str) -> None:
     """Запрос выбрасывает WBAuthError при 401."""
-    respx.get(
-        "https://content-api.wildberries.ru/content/v2/object/parent/all"
-    ).mock(
+    respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
         return_value=respx.MockResponse(401, json={"errorText": "Unauthorized"})
     )
     async with AsyncWBClient(token=token) as client:
@@ -207,9 +201,7 @@ async def test_async_request_raises_on_401(token: str) -> None:
 @respx.mock
 async def test_async_content_get_parent_categories(token: str) -> None:
     """ContentAPI.get_parent_categories возвращает данные при await."""
-    respx.get(
-        "https://content-api.wildberries.ru/content/v2/object/parent/all"
-    ).mock(
+    respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
         return_value=respx.MockResponse(
             200,
             json={
@@ -249,9 +241,9 @@ async def test_async_event_loop_not_blocked(token: str) -> None:
             ticks.append(time.perf_counter())
             await asyncio.sleep(0.02)
 
-    respx.get(
-        "https://content-api.wildberries.ru/content/v2/object/parent/all"
-    ).mock(side_effect=slow_response)
+    respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
+        side_effect=slow_response
+    )
 
     async with AsyncWBClient(token=token) as client:
         tick_task = asyncio.create_task(ticker())

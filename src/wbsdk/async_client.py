@@ -163,6 +163,7 @@ class AsyncWBClient:
                         await asyncio.sleep(wait_time)
                         continue
                     from wbsdk.exceptions import WBRateLimitError
+
                     raise WBRateLimitError(
                         "Превышен лимит запросов",
                         status_code=429,
@@ -239,6 +240,7 @@ class AsyncWBClient:
         """API контента и карточек товаров."""
         if self._content is None:
             from wbsdk.api.content import ContentAPI
+
             base_url = self._base_urls.get("content", BASE_URLS["content"])
             self._content = ContentAPI(self, base_url)
         return self._content
@@ -248,6 +250,7 @@ class AsyncWBClient:
         """API цен и скидок."""
         if self._prices is None:
             from wbsdk.api.prices import PricesAPI
+
             base_url = self._base_urls.get("prices", BASE_URLS["prices"])
             self._prices = PricesAPI(self, base_url)
         return self._prices
@@ -257,6 +260,7 @@ class AsyncWBClient:
         """API заказов FBS и поставок."""
         if self._marketplace is None:
             from wbsdk.api.marketplace import MarketplaceAPI
+
             base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
             self._marketplace = MarketplaceAPI(self, base_url)
         return self._marketplace
@@ -266,6 +270,7 @@ class AsyncWBClient:
         """API складов продавца (DBW)."""
         if self._warehouses is None:
             from wbsdk.api.warehouses import WarehousesAPI
+
             base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
             self._warehouses = WarehousesAPI(self, base_url)
         return self._warehouses
@@ -275,6 +280,7 @@ class AsyncWBClient:
         """API аналитики."""
         if self._analytics is None:
             from wbsdk.api.analytics import AnalyticsAPI
+
             base_url = self._base_urls.get("analytics", BASE_URLS["analytics"])
             self._analytics = AnalyticsAPI(self, base_url)
         return self._analytics
@@ -284,6 +290,7 @@ class AsyncWBClient:
         """API общего раздела: ping, новости, информация о продавце."""
         if self._general is None:
             from wbsdk.api.general import GeneralAPI
+
             base_url = self._base_urls.get("common", BASE_URLS["common"])
             self._general = GeneralAPI(self, base_url)
         return self._general
@@ -293,6 +300,7 @@ class AsyncWBClient:
         """API управления пользователями продавца."""
         if self._user_management is None:
             from wbsdk.api.user_management import UserManagementAPI
+
             base_url = self._base_urls.get("user_management", BASE_URLS["user_management"])
             self._user_management = UserManagementAPI(self, base_url)
         return self._user_management
@@ -302,6 +310,7 @@ class AsyncWBClient:
         """API тарифов и комиссий."""
         if self._tariffs is None:
             from wbsdk.api.tariffs import TariffsAPI
+
             base_url = self._base_urls.get("common", BASE_URLS["common"])
             self._tariffs = TariffsAPI(self, base_url)
         return self._tariffs
@@ -311,6 +320,7 @@ class AsyncWBClient:
         """API заказов DBW (доставка курьером WB)."""
         if self._orders_dbw is None:
             from wbsdk.api.orders_dbw import OrdersDBWAPI
+
             base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
             self._orders_dbw = OrdersDBWAPI(self, base_url)
         return self._orders_dbw
@@ -320,6 +330,7 @@ class AsyncWBClient:
         """API заказов DBS (витрина)."""
         if self._orders_dbs is None:
             from wbsdk.api.orders_dbs import OrdersDBSAPI
+
             base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
             self._orders_dbs = OrdersDBSAPI(self, base_url)
         return self._orders_dbs
@@ -329,6 +340,7 @@ class AsyncWBClient:
         """API заказов самовывоза (Click&Collect)."""
         if self._click_collect is None:
             from wbsdk.api.click_collect import ClickCollectAPI
+
             base_url = self._base_urls.get("marketplace", BASE_URLS["marketplace"])
             self._click_collect = ClickCollectAPI(self, base_url)
         return self._click_collect
@@ -338,6 +350,7 @@ class AsyncWBClient:
         """API поставок FBW (склад WB)."""
         if self._orders_fbw is None:
             from wbsdk.api.orders_fbw import OrdersFBWAPI
+
             base_url = self._base_urls.get("supplies", BASE_URLS["supplies"])
             self._orders_fbw = OrdersFBWAPI(self, base_url)
         return self._orders_fbw
@@ -347,6 +360,7 @@ class AsyncWBClient:
         """API вопросов, отзывов, чатов и претензий."""
         if self._communications is None:
             from wbsdk.api.communications import CommunicationsAPI
+
             base_url = self._base_urls.get("feedbacks", BASE_URLS["feedbacks"])
             self._communications = CommunicationsAPI(self, base_url)
         return self._communications
@@ -356,6 +370,7 @@ class AsyncWBClient:
         """API отчётов: поставки, остатки, заказы, продажи."""
         if self._reports is None:
             from wbsdk.api.reports import ReportsAPI
+
             base_url = self._base_urls.get("statistics", BASE_URLS["statistics"])
             self._reports = ReportsAPI(self, base_url)
         return self._reports
@@ -365,6 +380,7 @@ class AsyncWBClient:
         """API рекламных кампаний."""
         if self._promotion is None:
             from wbsdk.api.promotion import PromotionAPI
+
             base_url = self._base_urls.get("advert", BASE_URLS["advert"])
             self._promotion = PromotionAPI(self, base_url)
         return self._promotion
@@ -374,6 +390,7 @@ class AsyncWBClient:
         """API календаря акций."""
         if self._promotion_calendar is None:
             from wbsdk.api.promotion import PromotionCalendarAPI
+
             base_url = self._base_urls.get("dp_calendar", BASE_URLS["dp_calendar"])
             self._promotion_calendar = PromotionCalendarAPI(self, base_url)
         return self._promotion_calendar
@@ -383,6 +400,7 @@ class AsyncWBClient:
         """API баланса продавца."""
         if self._finances is None:
             from wbsdk.api.finances import FinancesAPI
+
             base_url = self._base_urls.get("finance", BASE_URLS["finance"])
             self._finances = FinancesAPI(self, base_url)
         return self._finances
@@ -392,6 +410,7 @@ class AsyncWBClient:
         """API документов продавца."""
         if self._documents is None:
             from wbsdk.api.finances import DocumentsAPI
+
             base_url = self._base_urls.get("documents", BASE_URLS["documents"])
             self._documents = DocumentsAPI(self, base_url)
         return self._documents
@@ -401,6 +420,7 @@ class AsyncWBClient:
         """API цифровых товаров WBD."""
         if self._wbd is None:
             from wbsdk.api.wbd import WBDAPI
+
             base_url = self._base_urls.get("wbd", BASE_URLS["wbd"])
             self._wbd = WBDAPI(self, base_url)
         return self._wbd

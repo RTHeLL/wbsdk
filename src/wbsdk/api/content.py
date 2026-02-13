@@ -241,9 +241,7 @@ class ContentAPI(BaseAPI):
             response_model=ContentMutationResponse,
         )
 
-    def move_cards(
-        self, target_imt: int | None, nm_ids: list[int]
-    ) -> ContentMutationResponse:
+    def move_cards(self, target_imt: int | None, nm_ids: list[int]) -> ContentMutationResponse:
         """Объединение или разделение карточек."""
         if target_imt is not None:
             return self.post(
@@ -310,9 +308,7 @@ class ContentAPI(BaseAPI):
             response_model=ContentMutationResponse,
         )
 
-    def upload_media_by_links(
-        self, nm_id: int, data: list[str]
-    ) -> ContentMutationResponse | None:
+    def upload_media_by_links(self, nm_id: int, data: list[str]) -> ContentMutationResponse | None:
         """Загрузка медиа по ссылкам."""
         return self.post(
             "/content/v3/media/save",

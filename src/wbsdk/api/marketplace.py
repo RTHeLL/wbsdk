@@ -63,9 +63,7 @@ class MarketplaceAPI(BaseAPI):
             response_model=OrdersStatusResponse,
         )
 
-    def get_orders_status_history(
-        self, order_ids: list[int]
-    ) -> OrdersStatusHistoryResponse:
+    def get_orders_status_history(self, order_ids: list[int]) -> OrdersStatusHistoryResponse:
         """История статусов сборочных заданий кроссбордера (до 100 заказов)."""
         return self.post(
             "/api/v3/orders/status/history",
@@ -207,9 +205,7 @@ class MarketplaceAPI(BaseAPI):
         """Перевод поставки в доставку."""
         self.patch(f"/api/v3/supplies/{supply_id}/deliver")
 
-    def get_supply_barcode(
-        self, supply_id: str, *, barcode_type: str = "svg"
-    ) -> BarcodeResponse:
+    def get_supply_barcode(self, supply_id: str, *, barcode_type: str = "svg") -> BarcodeResponse:
         """QR-код поставки."""
         return self.get(
             f"/api/v3/supplies/{supply_id}/barcode",

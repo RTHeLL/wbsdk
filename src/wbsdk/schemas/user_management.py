@@ -1,6 +1,5 @@
 """Pydantic-схемы User Management API."""
 
-
 from pydantic import BaseModel, ConfigDict, Field
 
 

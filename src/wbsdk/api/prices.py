@@ -104,9 +104,7 @@ class PricesAPI(BaseAPI):
             response_model=GoodsWithPricesResponse,
         )
 
-    def get_goods_with_prices_by_articles(
-        self, nm_list: list[int]
-    ) -> GoodsWithPricesResponse:
+    def get_goods_with_prices_by_articles(self, nm_list: list[int]) -> GoodsWithPricesResponse:
         """Товары с ценами по артикулам (до 1000)."""
         return self.post(
             "/api/v2/list/goods/filter",

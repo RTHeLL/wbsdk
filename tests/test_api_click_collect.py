@@ -40,9 +40,7 @@ def test_get_orders(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v3/click-collect/orders").mock(
         return_value=respx.MockResponse(200, json={"orders": [], "next": 0})
     )
-    result = client.click_collect.get_orders(
-        date_from=1704067200, date_to=1706745599
-    )
+    result = client.click_collect.get_orders(date_from=1704067200, date_to=1706745599)
     assert isinstance(result, OrdersListResponse)
     assert result.orders == []
 
@@ -60,9 +58,9 @@ def test_get_orders_client(client: WBClient) -> None:
 @respx.mock
 def test_delete_order_meta(client: WBClient) -> None:
     """Тест delete_order_meta — удаление метаданных по ключу."""
-    route = respx.delete(
-        f"{BASE_URL}/api/v3/click-collect/orders/123/meta"
-    ).mock(return_value=respx.MockResponse(204))
+    route = respx.delete(f"{BASE_URL}/api/v3/click-collect/orders/123/meta").mock(
+        return_value=respx.MockResponse(204)
+    )
     client.click_collect.delete_order_meta(order_id=123, key="imei")
     assert route.called
     assert "key=imei" in str(route.calls.last.request.url)
@@ -71,8 +69,8 @@ def test_delete_order_meta(client: WBClient) -> None:
 @respx.mock
 def test_delete_order_meta_without_key(client: WBClient) -> None:
     """Тест delete_order_meta без key."""
-    route = respx.delete(
-        f"{BASE_URL}/api/v3/click-collect/orders/456/meta"
-    ).mock(return_value=respx.MockResponse(204))
+    route = respx.delete(f"{BASE_URL}/api/v3/click-collect/orders/456/meta").mock(
+        return_value=respx.MockResponse(204)
+    )
     client.click_collect.delete_order_meta(order_id=456)
     assert route.called

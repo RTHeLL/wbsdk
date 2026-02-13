@@ -63,6 +63,7 @@ class TariffsAPI(BaseAPI):
             params=params or None,
         )
         if inspect.iscoroutine(result):
+
             async def _await_and_normalize() -> list[dict[str, Any]]:
                 raw = await result
                 return raw if isinstance(raw, list) else []

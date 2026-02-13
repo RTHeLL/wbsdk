@@ -52,9 +52,7 @@ def test_get_users(client: WBClient) -> None:
 @respx.mock
 def test_update_users_access(client: WBClient) -> None:
     """Тест update_users_access."""
-    respx.put(f"{BASE_URL}/api/v1/users/access").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.put(f"{BASE_URL}/api/v1/users/access").mock(return_value=respx.MockResponse(200))
     client.user_management.update_users_access(
         users_accesses=[{"userId": 1, "access": [{"code": "balance", "disabled": False}]}]
     )
@@ -63,7 +61,5 @@ def test_update_users_access(client: WBClient) -> None:
 @respx.mock
 def test_delete_user(client: WBClient) -> None:
     """Тест delete_user."""
-    respx.delete(f"{BASE_URL}/api/v1/user").mock(
-        return_value=respx.MockResponse(200)
-    )
+    respx.delete(f"{BASE_URL}/api/v1/user").mock(return_value=respx.MockResponse(200))
     client.user_management.delete_user(user_id=123)

@@ -26,9 +26,7 @@ def test_get_keys(client: WBClient) -> None:
 @respx.mock
 def test_get_offers(client: WBClient) -> None:
     """Тест get_offers."""
-    respx.get(f"{BASE_URL}/api/v1/offers").mock(
-        return_value=respx.MockResponse(200, json=[])
-    )
+    respx.get(f"{BASE_URL}/api/v1/offers").mock(return_value=respx.MockResponse(200, json=[]))
     result = client.wbd.get_offers()
     assert result is not None
 
@@ -46,9 +44,7 @@ def test_get_offer(client: WBClient) -> None:
 @respx.mock
 def test_get_catalog(client: WBClient) -> None:
     """Тест get_catalog."""
-    respx.get(f"{BASE_URL}/api/v1/catalog").mock(
-        return_value=respx.MockResponse(200, json=[])
-    )
+    respx.get(f"{BASE_URL}/api/v1/catalog").mock(return_value=respx.MockResponse(200, json=[]))
     result = client.wbd.get_catalog()
     assert result is not None
 

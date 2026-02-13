@@ -118,9 +118,7 @@ def test_sandbox_request_goes_to_sandbox_url(token: str) -> None:
     """При sandbox=True запрос уходит на content-api-sandbox."""
     route = respx.get(
         "https://content-api-sandbox.wildberries.ru/content/v2/object/parent/all"
-    ).mock(
-        return_value=respx.MockResponse(200, json={"data": [], "error": False})
-    )
+    ).mock(return_value=respx.MockResponse(200, json={"data": [], "error": False}))
     with WBClient(token=token, sandbox=True) as client:
         client.content.get_parent_categories()
     assert route.called

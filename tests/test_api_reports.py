@@ -19,9 +19,7 @@ def test_get_incomes(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v1/supplier/incomes").mock(
         return_value=respx.MockResponse(200, json=[])
     )
-    result = client.reports.get_incomes(
-        date_from="2024-01-01", date_to="2024-01-31"
-    )
+    result = client.reports.get_incomes(date_from="2024-01-01", date_to="2024-01-31")
     assert result == []
 
 
@@ -31,9 +29,7 @@ def test_get_stocks(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v1/supplier/stocks").mock(
         return_value=respx.MockResponse(200, json=[])
     )
-    result = client.reports.get_stocks(
-        date_from="2024-01-01", date_to="2024-01-31"
-    )
+    result = client.reports.get_stocks(date_from="2024-01-01", date_to="2024-01-31")
     assert result == []
 
 
@@ -43,9 +39,7 @@ def test_get_orders(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v1/supplier/orders").mock(
         return_value=respx.MockResponse(200, json=[])
     )
-    result = client.reports.get_orders(
-        date_from="2024-01-01", date_to="2024-01-31"
-    )
+    result = client.reports.get_orders(date_from="2024-01-01", date_to="2024-01-31")
     assert result == []
 
 
@@ -55,9 +49,7 @@ def test_get_sales(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v1/supplier/sales").mock(
         return_value=respx.MockResponse(200, json=[])
     )
-    result = client.reports.get_sales(
-        date_from="2024-01-01", date_to="2024-01-31"
-    )
+    result = client.reports.get_sales(date_from="2024-01-01", date_to="2024-01-31")
     assert result == []
 
 

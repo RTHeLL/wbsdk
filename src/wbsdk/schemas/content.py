@@ -100,10 +100,7 @@ class DirectoryListResponse(BaseModel):
             if isinstance(data, list):
                 value = {
                     **value,
-                    "data": [
-                        {"name": x} if isinstance(x, str) else x
-                        for x in data
-                    ],
+                    "data": [{"name": x} if isinstance(x, str) else x for x in data],
                 }
         return value
 

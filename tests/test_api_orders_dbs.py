@@ -31,9 +31,7 @@ def test_get_orders(client: WBClient) -> None:
     respx.get(f"{BASE_URL}/api/v3/dbs/orders").mock(
         return_value=respx.MockResponse(200, json={"orders": [], "next": 0})
     )
-    result = client.orders_dbs.get_orders(
-        date_from=1704067200, date_to=1706745599
-    )
+    result = client.orders_dbs.get_orders(date_from=1704067200, date_to=1706745599)
     assert isinstance(result, OrdersListResponse)
     assert result.orders == []
 
@@ -41,9 +39,7 @@ def test_get_orders(client: WBClient) -> None:
 @respx.mock
 def test_cancel_order(client: WBClient) -> None:
     """Тест cancel_order."""
-    respx.patch(f"{BASE_URL}/api/v3/dbs/orders/1/cancel").mock(
-        return_value=respx.MockResponse(204)
-    )
+    respx.patch(f"{BASE_URL}/api/v3/dbs/orders/1/cancel").mock(return_value=respx.MockResponse(204))
     client.orders_dbs.cancel_order(order_id=1)
 
 

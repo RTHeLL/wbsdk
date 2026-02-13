@@ -295,9 +295,7 @@ class AnalyticsAPI(BaseAPI):
             response_model=AnalyticsDataResponse,
         )
 
-    def get_search_report_table_details(
-        self, payload: dict[str, Any]
-    ) -> AnalyticsDataResponse:
+    def get_search_report_table_details(self, payload: dict[str, Any]) -> AnalyticsDataResponse:
         """Пагинация по товарам в группе в отчёте по поисковым запросам."""
         return self.post(
             "/api/v2/search-report/table/details",
@@ -315,9 +313,7 @@ class AnalyticsAPI(BaseAPI):
             response_model=AnalyticsDataResponse,
         )
 
-    def get_search_report_product_orders(
-        self, payload: dict[str, Any]
-    ) -> AnalyticsDataResponse:
+    def get_search_report_product_orders(self, payload: dict[str, Any]) -> AnalyticsDataResponse:
         """Заказы и позиции по поисковым запросам товара."""
         return self.post(
             "/api/v2/search-report/product/orders",
@@ -327,9 +323,7 @@ class AnalyticsAPI(BaseAPI):
 
     # --- История остатков: офисы и размеры ---
 
-    def get_stocks_report_offices(
-        self, payload: dict[str, Any]
-    ) -> AnalyticsDataResponse:
+    def get_stocks_report_offices(self, payload: dict[str, Any]) -> AnalyticsDataResponse:
         """Данные по остаткам по складам."""
         return self.post(
             "/api/v2/stocks-report/offices",
@@ -337,9 +331,7 @@ class AnalyticsAPI(BaseAPI):
             response_model=AnalyticsDataResponse,
         )
 
-    def get_stocks_report_products_sizes(
-        self, payload: dict[str, Any]
-    ) -> AnalyticsDataResponse:
+    def get_stocks_report_products_sizes(self, payload: dict[str, Any]) -> AnalyticsDataResponse:
         """Данные по остаткам по размерам товара."""
         return self.post(
             "/api/v2/stocks-report/products/sizes",
