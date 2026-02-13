@@ -10,7 +10,11 @@ docs_dir: docs
 nav:
   - Главная: index.md
   - API Reference: api.md
-  - Идеи развития: DEVELOPMENT_IDEAS.md
+  - История версий: CHANGELOG.md
+  - CONTRIBUTING: CONTRIBUTING.md
+  - SECURITY: SECURITY.md
+  - CODE OF CONDUCT: CODE_OF_CONDUCT.md
+  - LICENSE: LICENSE
 
 plugins:
   - search
