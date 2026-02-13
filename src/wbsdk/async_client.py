@@ -1,10 +1,12 @@
 """Асинхронный HTTP-клиент WB API."""
 
 import asyncio
+import logging
 from typing import TYPE_CHECKING, Any
 
 import httpx
 
+from wbsdk.client import logger
 from wbsdk.config import (
     BASE_URLS,
     DEFAULT_RETRY_ATTEMPTS,
@@ -40,6 +42,9 @@ class AsyncWBClient:
 
     Используйте "async with AsyncWBClient(token) as client:" или явно
     "await client.close()" после работы, чтобы корректно закрыть соединения.
+
+    При debug=True (или при уровне DEBUG логгера ``wbsdk``) в лог выводятся метод,
+    URL, домен и код/размер ответа; токен и тела запросов/ответов не логируются.
     """
 
     def __init__(
@@ -51,6 +56,7 @@ class AsyncWBClient:
         retry_backoff: float = DEFAULT_RETRY_BACKOFF,
         base_urls: dict[str, str] | None = None,
         sandbox: bool = False,
+        debug: bool = False,
     ):
         if not token or not isinstance(token, str):
             raise ValueError("Токен обязателен и должен быть непустой строкой")
@@ -59,6 +65,7 @@ class AsyncWBClient:
         self._timeout = timeout
         self._retry_attempts = retry_attempts
         self._retry_backoff = retry_backoff
+        self._debug = debug
         if base_urls is not None:
             self._base_urls = base_urls
         elif sandbox:
@@ -95,6 +102,24 @@ class AsyncWBClient:
         """Ожидает соблюдения rate limit для домена."""
         await self._rate_limiter.acquire(domain)
 
+    def _should_log(self) -> bool:
+        """Проверяет, нужно ли логировать запросы (debug или уровень DEBUG)."""
+        return self._debug or logger.isEnabledFor(logging.DEBUG)
+
+    def _log_response(self, method: str, url: str, response: httpx.Response) -> None:
+        """Логирует ответ (метод, URL, код, размер)."""
+        size = response.headers.get("Content-Length")
+        if size is None and response.content is not None:
+            size = str(len(response.content))
+        size_str = size if size is not None else "?"
+        logger.debug(
+            "WB API response: %s %s -> %d (%s bytes)",
+            method,
+            url,
+            response.status_code,
+            size_str,
+        )
+
     async def request(
         self,
         method: str,
@@ -109,6 +134,8 @@ class AsyncWBClient:
     ) -> Any:
         """Выполняет HTTP-запрос с retry при 429."""
         await self._wait_rate_limit(domain)
+        if self._should_log():
+            logger.debug("WB API request: %s %s [domain=%s]", method, url, domain)
 
         request_headers = {"Authorization": self._token}
         if headers:
@@ -126,6 +153,8 @@ class AsyncWBClient:
                     files=files,
                     headers=request_headers,
                 )
+                if self._should_log():
+                    self._log_response(method, url, response)
 
                 if response.status_code == 429:
                     retry_after = response.headers.get("Retry-After", "60")
@@ -177,12 +206,16 @@ class AsyncWBClient:
     ) -> bytes:
         """Выполняет запрос и возвращает сырые байты (для скачивания файлов)."""
         await self._wait_rate_limit(domain)
+        if self._should_log():
+            logger.debug("WB API request: %s %s [domain=%s]", method, url, domain)
         response = await self._http_client.request(
             method=method,
             url=url,
             params=params,
             headers={"Authorization": self._token},
         )
+        if self._should_log():
+            self._log_response(method, url, response)
         if not response.is_success:
             try:
                 error_data = response.json()

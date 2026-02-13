@@ -1,5 +1,7 @@
 """Тесты базового клиента."""
 
+import logging
+
 import pytest
 import respx
 
@@ -188,3 +190,35 @@ def test_content_get_parent_categories(token: str) -> None:
     assert result.data is not None
     assert len(result.data) == 1
     assert result.data[0].name == "Категория"
+
+
+@respx.mock
+def test_debug_logs_request_and_response(caplog: pytest.LogCaptureFixture, token: str) -> None:
+    """При debug=True в лог выводятся запрос и ответ, токен не логируется."""
+    caplog.set_level(logging.DEBUG, logger="wbsdk")
+    respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
+        return_value=respx.MockResponse(200, json={"data": [], "error": False})
+    )
+    with WBClient(token=token, debug=True) as client:
+        client.content.get_parent_categories()
+    log_text = caplog.text
+    assert "WB API request:" in log_text
+    assert "GET" in log_text
+    assert "content-api.wildberries.ru" in log_text or "content/v2/object" in log_text
+    assert "domain=content" in log_text
+    assert "WB API response:" in log_text
+    assert "200" in log_text
+    assert token not in log_text
+
+
+@respx.mock
+def test_debug_false_no_debug_logs_with_info_level(caplog: pytest.LogCaptureFixture, token: str) -> None:
+    """При debug=False и уровне INFO отладочные сообщения wbsdk не выводятся."""
+    caplog.set_level(logging.INFO, logger="wbsdk")
+    respx.get("https://content-api.wildberries.ru/content/v2/object/parent/all").mock(
+        return_value=respx.MockResponse(200, json={"data": [], "error": False})
+    )
+    with WBClient(token=token, debug=False) as client:
+        client.content.get_parent_categories()
+    wbsdk_logs = [r for r in caplog.records if r.name == "wbsdk"]
+    assert not wbsdk_logs
